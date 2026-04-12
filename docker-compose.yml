@@ -18,8 +18,8 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     container_name: play-console-backend
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     volumes:
       - ./backend:/app
       - backend-uploads:/app/uploads
