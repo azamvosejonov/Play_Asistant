@@ -44,7 +44,7 @@ export default function AppManagement() {
   const [savedGraphics, setSavedGraphics] = useState([]);
   
   // AI states
-  const GROQ_API_KEY = 'your-groq-api-key-here';
+  const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState(null);
   const [showAiModal, setShowAiModal] = useState(false);
