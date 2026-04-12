@@ -1,0 +1,59 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: play-console-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - play-console-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: play-console-backend
+    expose:
+      - "8000"
+    volumes:
+      - ./backend:/app
+      - backend-uploads:/app/uploads
+      - backend-service-accounts:/app/service_accounts
+      - backend-db:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - play-console-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: play-console-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - play-console-network
+
+volumes:
+  backend-uploads:
+  backend-service-accounts:
+  backend-db:
+
+networks:
+  play-console-network:
+    driver: bridge
