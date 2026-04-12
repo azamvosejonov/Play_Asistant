@@ -16,6 +16,14 @@ columns_to_add = [
     ("aab_version_code", "INTEGER"),
     ("aab_version_name", "TEXT"),
     ("aab_uploaded_at", "DATETIME"),
+    ("status", "TEXT DEFAULT 'draft'"),
+    ("draft_title", "TEXT"),
+    ("draft_short_description", "TEXT"),
+    ("draft_full_description", "TEXT"),
+    ("draft_language", "TEXT DEFAULT 'en'"),
+    ("draft_updated_at", "DATETIME"),
+    ("default_language", "TEXT DEFAULT 'en-US'"),
+    ("contact_email", "TEXT"),
 ]
 
 for col_name, col_type in columns_to_add:
