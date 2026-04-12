@@ -6,16 +6,25 @@ db_path = "data/play_deploy.db"
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
-# Check if column already exists
+# Check existing columns
 cursor.execute("PRAGMA table_info(apps)")
 columns = [col[1] for col in cursor.fetchall()]
 
-if "aab_file_path" not in columns:
-    print("Adding aab_file_path column to apps table...")
-    cursor.execute("ALTER TABLE apps ADD COLUMN aab_file_path TEXT")
-    conn.commit()
-    print("Column added successfully!")
-else:
-    print("Column aab_file_path already exists.")
+# Columns to add
+columns_to_add = [
+    ("aab_file_path", "TEXT"),
+    ("aab_version_code", "INTEGER"),
+    ("aab_version_name", "TEXT"),
+    ("aab_uploaded_at", "DATETIME"),
+]
+
+for col_name, col_type in columns_to_add:
+    if col_name not in columns:
+        print(f"Adding {col_name} column to apps table...")
+        cursor.execute(f"ALTER TABLE apps ADD COLUMN {col_name} {col_type}")
+        conn.commit()
+        print(f"Column {col_name} added successfully!")
+    else:
+        print(f"Column {col_name} already exists.")
 
 conn.close()
