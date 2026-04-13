@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Smartphone, Rocket, Shield, Zap, ArrowRight } from 'lucide-react';
+import { Rocket, Shield, Zap, ArrowRight } from 'lucide-react';
+import logo from '../assets/logo.png';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import BetaBadge from '../components/BetaBadge';
@@ -13,7 +14,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <Smartphone className="w-6 h-6 text-primary-600" />
+              <img src={logo} alt="NexusDeploy" className="w-8 h-8 rounded-lg" />
               <span className="text-xl font-bold">{t('appName')}</span>
               <BetaBadge />
             </div>

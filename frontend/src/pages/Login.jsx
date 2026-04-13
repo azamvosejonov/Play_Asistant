@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, Smartphone } from 'lucide-react';
+import { LogIn } from 'lucide-react';
+import logo from '../assets/logo.png';
 import { useTranslation } from 'react-i18next';
 import { authAPI } from '../utils/api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -39,9 +40,7 @@ export default function Login({ onLogin }) {
       </div>
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-2xl mb-4">
-            <Smartphone className="w-8 h-8 text-white" />
-          </div>
+          <img src={logo} alt="NexusDeploy" className="w-20 h-20 rounded-2xl mb-4 mx-auto" />
           <div className="flex items-center justify-center gap-3 mb-2">
             <h1 className="text-3xl font-bold text-gray-900">{t('appName')}</h1>
             <BetaBadge />
