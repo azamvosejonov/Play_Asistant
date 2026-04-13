@@ -48,7 +48,7 @@ export default function Dashboard({ isAdmin }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center gap-3">
-                <img src={logo} alt="NexusDeploy" className="w-8 h-8 rounded-lg" />
+                <img src={logo} alt="NexusDeploy" className="w-12 h-12 rounded-xl" />
                 <span className="text-xl font-bold">{t('appName')}</span>
                 <BetaBadge />
               </div>
@@ -88,7 +88,7 @@ export default function Dashboard({ isAdmin }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <img src={logo} alt="NexusDeploy" className="w-8 h-8 rounded-lg" />
+              <img src={logo} alt="NexusDeploy" className="w-12 h-12 rounded-xl" />
               <span className="text-xl font-bold">{t('appName')}</span>
               <BetaBadge />
             </div>
@@ -127,8 +127,8 @@ export default function Dashboard({ isAdmin }) {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src={logo} alt="NexusDeploy" className="w-12 h-12" />
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center overflow-hidden">
+                    <img src={logo} alt="NexusDeploy" className="w-14 h-14" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">{account.name}</h3>

@@ -40,7 +40,7 @@ export default function Login({ onLogin }) {
       </div>
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <img src={logo} alt="NexusDeploy" className="w-20 h-20 rounded-2xl mb-4 mx-auto" />
+          <img src={logo} alt="NexusDeploy" className="w-24 h-24 rounded-2xl mb-4 mx-auto" />
           <div className="flex items-center justify-center gap-3 mb-2">
             <h1 className="text-3xl font-bold text-gray-900">{t('appName')}</h1>
             <BetaBadge />
