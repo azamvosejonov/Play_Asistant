@@ -1553,9 +1553,36 @@ def admin_delete_user(user_id: int, admin: models.User = Depends(require_admin),
         raise HTTPException(status_code=404, detail="Foydalanuvchi topilmadi")
     if user.is_admin:
         raise HTTPException(status_code=400, detail="Admin'ni o'chirib bo'lmaydi")
-    db.delete(user)
-    db.commit()
-    return {"success": True}
+    
+    try:
+        # Bog'liq ma'lumotlarni ketma-ket o'chirish
+        # 1. SupportMessage (sender_id va ticket orqali)
+        db.query(models.SupportMessage).filter(models.SupportMessage.sender_id == user_id).delete(synchronize_session=False)
+        tickets = db.query(models.SupportTicket).filter(models.SupportTicket.user_id == user_id).all()
+        for ticket in tickets:
+            db.query(models.SupportMessage).filter(models.SupportMessage.ticket_id == ticket.id).delete(synchronize_session=False)
+        db.query(models.SupportTicket).filter(models.SupportTicket.user_id == user_id).delete(synchronize_session=False)
+        
+        # 2. Templates
+        db.query(models.Template).filter(models.Template.user_id == user_id).delete(synchronize_session=False)
+        
+        # 3. Apps (Listing, Graphic) → ServiceAccount
+        service_accounts = db.query(models.ServiceAccount).filter(models.ServiceAccount.user_id == user_id).all()
+        for sa in service_accounts:
+            apps = db.query(models.App).filter(models.App.service_account_id == sa.id).all()
+            for a in apps:
+                db.query(models.Graphic).filter(models.Graphic.app_id == a.id).delete(synchronize_session=False)
+                db.query(models.Listing).filter(models.Listing.app_id == a.id).delete(synchronize_session=False)
+                db.delete(a)
+            db.delete(sa)
+        
+        db.delete(user)
+        db.commit()
+        return {"success": True}
+    except Exception as e:
+        db.rollback()
+        print(f"[ERROR] User o'chirishda xatolik: {e}")
+        raise HTTPException(status_code=500, detail=f"O'chirishda xatolik: {str(e)}")
 
 ## ===================== SUPPORT TIZIMI ===================== ##
 
