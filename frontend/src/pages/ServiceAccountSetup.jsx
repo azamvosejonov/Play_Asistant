@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, ArrowLeft, CheckCircle, XCircle, FileJson } from 'lucide-react';
+import { Upload, ArrowLeft, CheckCircle, XCircle, FileJson, ExternalLink, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { serviceAccountAPI } from '../utils/api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -18,7 +18,7 @@ export default function ServiceAccountSetup() {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       if (!selectedFile.name.endsWith('.json')) {
-        setError('Faqat JSON fayl yuklash mumkin');
+        setError(t('setupOnlyJson'));
         setFile(null);
         return;
       }
@@ -32,7 +32,7 @@ export default function ServiceAccountSetup() {
     setError('');
 
     if (!name || !file) {
-      setError('Barcha maydonlarni to\'ldiring');
+      setError(t('setupFillAll'));
       return;
     }
 
@@ -49,7 +49,7 @@ export default function ServiceAccountSetup() {
         navigate('/dashboard');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('setupError'));
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function ServiceAccountSetup() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="input"
-                placeholder="Masalan: Asosiy Account"
+                placeholder={t('setupPlaceholder')}
                 required
               />
             </div>
@@ -134,15 +134,114 @@ export default function ServiceAccountSetup() {
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-medium text-blue-900 mb-2">Qanday qilib JSON kalit olish mumkin?</h3>
-              <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
-                <li>Google Cloud Console'ga kiring</li>
-                <li>Yangi loyiha yarating yoki mavjudini tanlang</li>
-                <li>Google Play Android Developer API'ni yoqing</li>
-                <li>Service Account yarating va JSON kalitni yuklab oling</li>
-                <li>Play Console'da API access bo'limida accountga ruxsat bering</li>
-              </ol>
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 space-y-4">
+              <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
+                <Info className="w-5 h-5" />
+                {t('setupHowToGet')}
+              </h3>
+
+              {/* Step 1 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">{t('guideStep1Title')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{t('guideStep1Desc')}</p>
+                    <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      console.cloud.google.com <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">{t('guideStep2Title')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{t('guideStep2Desc')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">{t('guideStep3Title')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{t('guideStep3Desc')}</p>
+                    <a href="https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      Google Play Android Developer API <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">{t('guideStep4Title')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{t('guideStep4Desc')}</p>
+                    <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      IAM & Admin → Service Accounts <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 5 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">{t('guideStep5Title')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{t('guideStep5Desc')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 6 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">6</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">{t('guideStep6Title')}</p>
+                    <p className="text-sm text-blue-700 mt-1">{t('guideStep6Desc')}</p>
+                    <a href="https://play.google.com/console/developers" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      Play Console → API access <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 7 */}
+              <div className="bg-white rounded-lg p-4 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <span className="bg-green-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">7</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-green-800">{t('guideStep7Title')}</p>
+                    <p className="text-sm text-green-700 mt-1">{t('guideStep7Desc')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Important notes */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
+                <h4 className="font-semibold text-amber-900 text-sm mb-2">{t('guideNotesTitle')}</h4>
+                <ul className="text-xs text-amber-800 space-y-1 list-disc list-inside">
+                  <li>{t('guideNote1')}</li>
+                  <li>{t('guideNote2')}</li>
+                  <li>{t('guideNote3')}</li>
+                </ul>
+              </div>
             </div>
 
             <button
