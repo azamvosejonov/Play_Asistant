@@ -175,19 +175,33 @@ def get_apps(
         models.App.service_account_id == service_account_id
     ).all()
     
-    return [{
-        "id": app.id,
-        "package_name": app.package_name,
-        "app_name": app.app_name,
-        "icon_url": app.icon_url,
-        "status": getattr(app, 'status', 'draft'),
-        "default_language": getattr(app, 'default_language', 'en-US'),
-        "has_aab": bool(getattr(app, 'aab_file_path', None)),
-        "draft_title": getattr(app, 'draft_title', None),
-        "draft_short_description": getattr(app, 'draft_short_description', None),
-        "draft_full_description": getattr(app, 'draft_full_description', None),
-        "draft_language": getattr(app, 'draft_language', 'en')
-    } for app in apps]
+    result = []
+    for app in apps:
+        # Agar icon_url bo'sh bo'lsa, local grafikadan olish
+        icon_url = app.icon_url
+        if not icon_url:
+            icon_graphic = db.query(models.Graphic).filter(
+                models.Graphic.app_id == app.id,
+                models.Graphic.graphic_type == 'icon'
+            ).first()
+            if icon_graphic:
+                icon_url = f"/{icon_graphic.file_path}"
+        
+        result.append({
+            "id": app.id,
+            "package_name": app.package_name,
+            "app_name": app.app_name,
+            "icon_url": icon_url,
+            "status": getattr(app, 'status', 'draft'),
+            "default_language": getattr(app, 'default_language', 'en-US'),
+            "has_aab": bool(getattr(app, 'aab_file_path', None)),
+            "draft_title": getattr(app, 'draft_title', None),
+            "draft_short_description": getattr(app, 'draft_short_description', None),
+            "draft_full_description": getattr(app, 'draft_full_description', None),
+            "draft_language": getattr(app, 'draft_language', 'en')
+        })
+    
+    return result
 
 @app.delete("/api/apps/{app_id}")
 def delete_app(

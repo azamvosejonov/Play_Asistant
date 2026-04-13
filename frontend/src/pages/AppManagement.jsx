@@ -214,9 +214,9 @@ export default function AppManagement() {
       const icon = response.data.find(g => g.graphic_type === 'icon');
       const feature = response.data.find(g => g.graphic_type === 'featureGraphic');
       const screenshots = response.data.filter(g => g.graphic_type === 'phoneScreenshots');
-      // Docker/production da nginx orqali, development da to'g'ridan API URL ishlatish
-      const isDocker = import.meta.env.VITE_API_URL?.includes('backend');
-      const baseURL = isDocker ? window.location.origin : (import.meta.env.VITE_API_URL || 'http://localhost:8000');
+      // Production da nginx orqali (VITE_API_URL bo'sh), development da API URL ishlatish
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const baseURL = apiUrl ? apiUrl : window.location.origin;
       setPreviewImages({
         icon: icon ? `${baseURL}${icon.url}` : null,
         featureGraphic: feature ? `${baseURL}${feature.url}` : null,
