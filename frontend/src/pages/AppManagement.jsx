@@ -23,7 +23,7 @@ export default function AppManagement() {
   const [newPackageNames, setNewPackageNames] = useState('');
   const [adding, setAdding] = useState(false);
   
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('en-US');
   const [title, setTitle] = useState('');
   const [shortDesc, setShortDesc] = useState('');
   const [fullDesc, setFullDesc] = useState('');
@@ -74,7 +74,8 @@ export default function AppManagement() {
         package_name: targetApp.package_name,
         service_account_id: parseInt(serviceAccountId),
         groq_api_key: GROQ_API_KEY,
-        prompt: prompt || aiPrompt
+        prompt: prompt || aiPrompt,
+        language: language
       });
       if (res.data.success) {
         const data = res.data.data;
@@ -145,7 +146,8 @@ export default function AppManagement() {
         title: title,
         short_description: shortDesc,
         full_description: fullDesc,
-        contact_email: contactEmail || 'dev@example.com'
+        contact_email: contactEmail || 'dev@example.com',
+        language: language
       }, serviceAccountId);
       
       setDeployResult(res.data.results);
@@ -347,7 +349,8 @@ export default function AppManagement() {
         package_name: selectedApp.package_name,
         title: title,
         short_description: shortDesc,
-        full_description: fullDesc
+        full_description: fullDesc,
+        language: language
       }, serviceAccountId);
 
       // Tarjimalarni yuborish

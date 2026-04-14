@@ -512,7 +512,8 @@ def submit_for_review(
         models.App.package_name == package_name
     ).first()
     
-    language = getattr(app_record, 'default_language', None) or 'en-US'
+    # Frontenddan kelgan tilni ishlatish, aks holda default_language
+    language = data.get('language') or getattr(app_record, 'default_language', None) or 'en-US'
     
     try:
         api = GooglePlayAPI(service_account.json_key_path)
@@ -609,7 +610,8 @@ def full_deploy(
         models.App.package_name == package_name
     ).first()
     
-    language = getattr(app_record, 'default_language', None) or 'en-US'
+    # Frontenddan kelgan tilni ishlatish, aks holda default_language
+    language = data.get('language') or getattr(app_record, 'default_language', None) or 'en-US'
     
     all_results = {
         'steps': [],
@@ -729,6 +731,30 @@ def ai_analyze_app(
     service_account_id = data.get('service_account_id')
     groq_api_key = data.get('groq_api_key', '')
     user_prompt = data.get('prompt', '')
+    target_language = data.get('language', 'en-US')
+    
+    # Til kodidan til nomini aniqlash
+    LANGUAGE_NAMES = {
+        'en-US': 'English', 'en-GB': 'English', 'en': 'English',
+        'ru-RU': 'Russian', 'ru': 'Russian',
+        'uz': 'Uzbek', 'uz-UZ': 'Uzbek',
+        'es-ES': 'Spanish', 'es': 'Spanish',
+        'fr-FR': 'French', 'fr': 'French',
+        'de-DE': 'German', 'de': 'German',
+        'tr-TR': 'Turkish', 'tr': 'Turkish',
+        'ar': 'Arabic',
+        'zh-CN': 'Chinese (Simplified)', 'zh-TW': 'Chinese (Traditional)',
+        'ja-JP': 'Japanese', 'ja': 'Japanese',
+        'ko-KR': 'Korean', 'ko': 'Korean',
+        'it': 'Italian', 'pt': 'Portuguese', 'pt-BR': 'Portuguese (Brazil)',
+        'hi': 'Hindi', 'bn': 'Bengali', 'th': 'Thai', 'vi': 'Vietnamese',
+        'id': 'Indonesian', 'ms': 'Malay', 'pl': 'Polish', 'uk': 'Ukrainian',
+        'nl': 'Dutch', 'sv': 'Swedish', 'da': 'Danish', 'fi': 'Finnish',
+        'no': 'Norwegian', 'cs': 'Czech', 'ro': 'Romanian', 'hu': 'Hungarian',
+        'el': 'Greek', 'bg': 'Bulgarian', 'hr': 'Croatian', 'sk': 'Slovak',
+        'sl': 'Slovenian', 'sr': 'Serbian', 'ka': 'Georgian', 'fa': 'Persian',
+    }
+    target_language_name = LANGUAGE_NAMES.get(target_language, target_language)
     
     if not package_name:
         raise HTTPException(status_code=400, detail="Package name kerak")
@@ -780,6 +806,7 @@ def ai_analyze_app(
 App name: {app_record.app_name or package_name}
 Status: {app_record.status}
 Default language: {getattr(app_record, 'default_language', 'en-US')}
+Target language: {target_language} ({target_language_name})
 AAB yuklangan: {aab_status}
 Icon: {icon_status}
 Feature Graphic: {feature_status}
@@ -795,23 +822,27 @@ Mavjud full description: {existing_listing.get('fullDescription', '')}"""
         if user_prompt:
             context += f"\n\nDasturchi izohi: {user_prompt}"
         
-        system_prompt = """Sen Google Play Store listing mutaxassisi va ASO (App Store Optimization) ekspertisan. Sening vazifang:
+        system_prompt = f"""Sen Google Play Store listing mutaxassisi va ASO (App Store Optimization) ekspertisan. Sening vazifang:
 Berilgan dastur haqidagi ma'lumotlar asosida Google Play Store uchun professional listing yoz va dasturchi uchun qolgan tasklar ro'yxatini tuzib ber.
 
+⚠️ MUHIM: title, short_description va full_description FAQAT {target_language_name} tilida yozilishi SHART! Boshqa tilda yozma!
+Target language: {target_language} ({target_language_name})
+
 Quyidagi formatda FAQAT JSON qaytarishing kerak (boshqa hech narsa yo'q):
-{
-  "title": "max 30 belgi, dastur nomi — SEO optimized",
-  "short_description": "max 80 belgi, qisqa va jozibali tavsif, asosiy kalitso'zlar bilan",
-  "full_description": "max 4000 belgi, to'liq professional tavsif. Key features, emoji bilan chiroyli, SEO kalit so'zlar bilan",
+{{
+  "title": "max 30 belgi, dastur nomi — {target_language_name} tilida, SEO optimized",
+  "short_description": "max 80 belgi, {target_language_name} tilida, qisqa va jozibali tavsif, asosiy kalitso'zlar bilan",
+  "full_description": "max 4000 belgi, {target_language_name} tilida, to'liq professional tavsif. Key features, emoji bilan chiroyli, SEO kalit so'zlar bilan",
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
   "category_suggestion": "tavsiya etiladigan kategoriya",
   "improvements": ["konkret maslahat 1", "konkret maslahat 2"],
   "remaining_tasks": ["qolgan task 1", "qolgan task 2"],
   "aso_score": 75,
   "aso_tips": ["ASO maslahat 1", "maslahat 2"]
-}
+}}
 
 Qoidalar:
+- BARCHA title, short_description, full_description FAQAT {target_language_name} tilida bo'lishi kerak!
 - Title 30 belgidan oshmasin, SEO uchun muhim kalit so'zlarni qo'sh
 - Short description 80 belgidan oshmasin, call-to-action bo'lsin
 - Full description professional, emoji va formatting bilan bo'lsin, 500+ so'z
