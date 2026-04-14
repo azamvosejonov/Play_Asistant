@@ -59,18 +59,21 @@ export default function ServiceAccountSetup() {
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
-            <button onClick={() => navigate('/dashboard')} className="btn btn-secondary flex items-center gap-2">
+          <div className="flex items-center justify-between h-16">
+            <button onClick={() => navigate('/dashboard')} className="btn btn-secondary flex items-center gap-2 text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2">
               <ArrowLeft className="w-4 h-4" />
               {t('back')}
             </button>
+            <div className="sm:hidden">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <div className="card">
-          <h1 className="text-3xl font-bold mb-2">{t('setupTitle')}</h1>
+      <div className="max-w-3xl mx-auto px-4 py-6 sm:py-12">
+        <div className="card p-4 sm:p-6">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t('setupTitle')}</h1>
           <p className="text-gray-600 mb-8">
             {t('setupDesc')}
           </p>
@@ -108,7 +111,7 @@ export default function ServiceAccountSetup() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('setupJsonKey')}
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-400 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center hover:border-primary-400 transition-colors">
                 <input
                   type="file"
                   onChange={handleFileChange}
@@ -134,7 +137,7 @@ export default function ServiceAccountSetup() {
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4">
               <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
                 <Info className="w-5 h-5" />
                 {t('setupHowToGet')}

@@ -482,15 +482,17 @@ export default function AppManagement() {
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <button onClick={() => navigate('/dashboard')} className="btn btn-secondary flex items-center gap-2">
+            <button onClick={() => navigate('/dashboard')} className="btn btn-secondary flex items-center gap-2 text-sm sm:text-base px-2 sm:px-4 py-1.5 sm:py-2">
               <ArrowLeft className="w-4 h-4" />
-              {t('back')}
+              <span className="hidden sm:inline">{t('back')}</span>
             </button>
-            <div className="flex items-center gap-3">
-              <LanguageSwitcher />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="hidden sm:block">
+                <LanguageSwitcher />
+              </div>
               <button
                 onClick={() => setShowAddApp(true)}
-                className="btn btn-primary flex items-center gap-2"
+                className="btn btn-primary flex items-center gap-1 sm:gap-2 text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2"
               >
                 <Plus className="w-4 h-4" />
                 {t('addApp')}
@@ -500,8 +502,8 @@ export default function AppManagement() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
           <div className="lg:col-span-1">
             <div className="card">
               <h2 className="text-xl font-bold mb-4">{t('selectApp')}</h2>
@@ -725,9 +727,9 @@ export default function AppManagement() {
                 )}
 
                 <div className="card">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold">{t('storeListing')}</h2>
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                    <h2 className="text-xl sm:text-2xl font-bold">{t('storeListing')}</h2>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => aiAnalyze()}
                         disabled={!selectedApp || aiLoading}
@@ -829,7 +831,7 @@ export default function AppManagement() {
                       <p className="text-xs text-gray-500 mt-1">{fullDesc.length}/4000</p>
                     </div>
 
-                    <div className="flex gap-3 flex-wrap">
+                    <div className="flex gap-2 sm:gap-3 flex-wrap">
                       <button
                         onClick={handleTranslate}
                         disabled={translating}
@@ -1014,7 +1016,7 @@ export default function AppManagement() {
                 <button
                   onClick={fullDeploy}
                   disabled={deploying || uploading || !title.trim()}
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl font-bold text-lg shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all mb-2"
+                  className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl font-bold text-base sm:text-lg shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all mb-2"
                 >
                   {deploying ? (
                     <>
@@ -1213,7 +1215,7 @@ export default function AppManagement() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="p-6 border-b bg-gradient-to-r from-purple-500 to-indigo-600 rounded-t-2xl">
+            <div className="p-4 sm:p-6 border-b bg-gradient-to-r from-purple-500 to-indigo-600 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -1230,7 +1232,7 @@ export default function AppManagement() {
               </div>
             </div>
             
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-4">
               {/* API key connected indicator */}
               <div className="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>

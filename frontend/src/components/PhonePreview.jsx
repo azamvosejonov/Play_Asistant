@@ -4,7 +4,7 @@ export default function PhonePreview({ title, shortDesc, fullDesc, iconUrl, feat
   return (
     <div className="sticky top-8">
       {/* Phone Shell */}
-      <div className="relative mx-auto" style={{ width: '300px' }}>
+      <div className="relative mx-auto scale-[0.85] sm:scale-100 origin-top" style={{ width: '300px' }}>
         {/* Outer frame */}
         <div className="bg-gradient-to-b from-[#1a1a2e] to-[#16213e] rounded-[2.8rem] p-[10px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]">
           {/* Inner bezel */}

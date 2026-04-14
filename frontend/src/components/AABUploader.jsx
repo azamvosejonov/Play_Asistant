@@ -66,7 +66,7 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
   };
 
   return (
-    <div className="bg-white rounded-lg border-2 border-gray-200 p-6">
+    <div className="bg-white rounded-lg border-2 border-gray-200 p-4 sm:p-6">
       <div className="flex items-center gap-3 mb-4">
         <Package className="w-6 h-6 text-primary-600" />
         <h3 className="text-lg font-bold text-black">{t('aabUpload')}</h3>
@@ -119,7 +119,7 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
             />
             <label
               htmlFor="aab-upload"
-              className="flex items-center justify-center gap-3 border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition-all"
+              className="flex items-center justify-center gap-3 border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition-all"
             >
               {file ? (
                 <>

@@ -35,14 +35,14 @@ export default function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
+      <div className="bg-white rounded-xl max-w-md w-full p-4 sm:p-6 shadow-2xl">
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center gap-3">
-            {type === 'warning' && <AlertTriangle className={`w-8 h-8 ${color.icon}`} />}
-            {type === 'success' && <CheckCircle className={`w-8 h-8 ${color.icon}`} />}
-            {type === 'danger' && <AlertTriangle className={`w-8 h-8 ${color.icon}`} />}
-            <h2 className="text-xl font-bold">{title}</h2>
+          <div className="flex items-center gap-2 sm:gap-3">
+            {type === 'warning' && <AlertTriangle className={`w-6 h-6 sm:w-8 sm:h-8 ${color.icon}`} />}
+            {type === 'success' && <CheckCircle className={`w-6 h-6 sm:w-8 sm:h-8 ${color.icon}`} />}
+            {type === 'danger' && <AlertTriangle className={`w-6 h-6 sm:w-8 sm:h-8 ${color.icon}`} />}
+            <h2 className="text-lg sm:text-xl font-bold">{title}</h2>
           </div>
           <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
             <X className="w-5 h-5" />

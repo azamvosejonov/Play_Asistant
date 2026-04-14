@@ -47,14 +47,14 @@ export default function Dashboard({ isAdmin }) {
         <nav className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-3">
-                <img src={logo} alt="NexusDeploy" className="w-20 h-20 rounded-2xl" />
-                <span className="text-xl font-bold">{t('appName')}</span>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <img src={logo} alt="NexusDeploy" className="w-10 h-10 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl" />
+                <span className="text-base sm:text-xl font-bold">{t('appName')}</span>
                 <BetaBadge />
               </div>
-              <button onClick={handleLogout} className="btn btn-secondary flex items-center gap-2">
+              <button onClick={handleLogout} className="btn btn-secondary flex items-center gap-2 text-sm sm:text-base">
                 <LogOut className="w-4 h-4" />
-                {t('logout')}
+                <span className="hidden sm:inline">{t('logout')}</span>
               </button>
             </div>
           </div>
@@ -87,34 +87,34 @@ export default function Dashboard({ isAdmin }) {
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <img src={logo} alt="NexusDeploy" className="w-20 h-20 rounded-2xl" />
-              <span className="text-xl font-bold">{t('appName')}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <img src={logo} alt="NexusDeploy" className="w-10 h-10 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl" />
+              <span className="text-base sm:text-xl font-bold truncate">{t('appName')}</span>
               <BetaBadge />
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-4">
               {isAdmin && (
-                <button onClick={() => navigate('/admin')} className="btn flex items-center gap-2 bg-purple-600 text-white hover:bg-purple-700">
+                <button onClick={() => navigate('/admin')} className="btn flex items-center gap-1 sm:gap-2 bg-purple-600 text-white hover:bg-purple-700 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
                   <Shield className="w-4 h-4" />
-                  {t('adminPanel')}
+                  <span className="hidden sm:inline">{t('adminPanel')}</span>
                 </button>
               )}
-              <button onClick={() => navigate('/setup')} className="btn btn-primary flex items-center gap-2">
+              <button onClick={() => navigate('/setup')} className="btn btn-primary flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
                 <Plus className="w-4 h-4" />
-                {t('newAccount')}
+                <span className="hidden sm:inline">{t('newAccount')}</span>
               </button>
-              <button onClick={handleLogout} className="btn btn-secondary flex items-center gap-2">
+              <button onClick={handleLogout} className="btn btn-secondary flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
                 <LogOut className="w-4 h-4" />
-                {t('logout')}
+                <span className="hidden sm:inline">{t('logout')}</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">{t('serviceAccounts')}</h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('serviceAccounts')}</h1>
           <LanguageSwitcher />
         </div>
 
@@ -127,8 +127,8 @@ export default function Dashboard({ isAdmin }) {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden">
-                    <img src={logo} alt="NexusDeploy" className="w-20 h-20" />
+                  <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <img src={logo} alt="NexusDeploy" className="w-14 h-14 sm:w-20 sm:h-20" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">{account.name}</h3>

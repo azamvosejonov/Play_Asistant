@@ -39,10 +39,10 @@ export default function Login({ onLogin }) {
         <LanguageSwitcher />
       </div>
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <img src={logo} alt="NexusDeploy" className="w-28 h-28 rounded-3xl mb-4 mx-auto" />
+        <div className="text-center mb-6 sm:mb-8">
+          <img src={logo} alt="NexusDeploy" className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl mb-3 sm:mb-4 mx-auto" />
           <div className="flex items-center justify-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-gray-900">{t('appName')}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('appName')}</h1>
             <BetaBadge />
           </div>
           <p className="text-gray-600 mt-2">{t('automate')}</p>

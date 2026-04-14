@@ -182,26 +182,28 @@ export default function Testing() {
       <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => navigate(`/apps/${serviceAccountId}`)}
                 className="flex items-center gap-1.5 text-gray-500 hover:text-gray-900 transition text-sm"
               >
                 <ArrowLeft className="w-4 h-4" />
-                {t('back')}
+                <span className="hidden sm:inline">{t('back')}</span>
               </button>
               <div className="h-5 w-px bg-gray-200"></div>
               <div className="flex items-center gap-2">
                 <TestTube className="w-5 h-5 text-purple-600" />
-                <h1 className="text-lg font-bold text-gray-900">{t('testing')}</h1>
+                <h1 className="text-base sm:text-lg font-bold text-gray-900">{t('testing')}</h1>
               </div>
             </div>
-            <LanguageSwitcher />
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Messages */}
         {success && (
           <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center gap-2 text-sm">
@@ -290,19 +292,19 @@ export default function Testing() {
           {/* Right Content */}
           <div className="lg:col-span-4">
             {!selectedApp ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-16 text-center">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 sm:p-16 text-center">
                 <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-400">{t('selectAppLeft')}</p>
               </div>
             ) : checkingTrack ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-16 text-center">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 sm:p-16 text-center">
                 <Loader2 className="w-8 h-8 text-purple-500 animate-spin mx-auto mb-3" />
                 <p className="text-gray-500 text-sm">Track holati tekshirilmoqda...</p>
                 <p className="text-gray-400 text-xs mt-1">{selectedApp.package_name}</p>
               </div>
             ) : trackError && !testAllowed ? (
               /* Test ruxsati yo'q */
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-12 text-center">
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Lock className="w-8 h-8 text-orange-500" />
                 </div>
@@ -365,7 +367,7 @@ export default function Testing() {
 
                 {/* Tab: Testers */}
                 {activeTab === 'testers' && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-5">
                       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                         <Users className="w-5 h-5 text-blue-600" />
@@ -412,7 +414,7 @@ export default function Testing() {
 
                 {/* Tab: Release */}
                 {activeTab === 'release' && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-5">
                       <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                         <Send className="w-5 h-5 text-green-600" />
@@ -456,7 +458,7 @@ export default function Testing() {
 
                 {/* Tab: Test Link */}
                 {activeTab === 'link' && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-5">
                       <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                         <LinkIcon className="w-5 h-5 text-purple-600" />
@@ -528,13 +530,13 @@ export default function Testing() {
                 {activeTab === 'stats' && (
                   <div className="space-y-4">
                     {loadingStats ? (
-                      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+                      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-12 text-center">
                         <Loader2 className="w-8 h-8 text-purple-500 animate-spin mx-auto mb-3" />
                         <p className="text-gray-400 text-sm">Statistika yuklanmoqda...</p>
                       </div>
                     ) : stats ? (
                       <>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           {[
                             { label: 'Reyting', value: stats.average_rating || '—', sub: '/5', icon: Star, color: 'yellow' },
                             { label: 'Sharhlar', value: stats.total_reviews || 0, sub: '', icon: MessageSquare, color: 'blue' },
@@ -587,7 +589,7 @@ export default function Testing() {
                         </div>
                       </>
                     ) : (
-                      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+                      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-12 text-center">
                         <BarChart3 className="w-10 h-10 text-gray-200 mx-auto mb-3" />
                         <p className="text-gray-400 text-sm mb-4">Statistikani ko'rish</p>
                         <button onClick={fetchStats} className="px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm">

@@ -128,22 +128,47 @@ export default function AdminPanel() {
       <nav className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button onClick={() => navigate('/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg">
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <Shield className="w-6 h-6 text-purple-600" />
-              <span className="text-xl font-bold text-purple-900">{t('adminPanel')}</span>
+              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+              <span className="text-base sm:text-xl font-bold text-purple-900">{t('adminPanel')}</span>
             </div>
-            <LanguageSwitcher />
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        {/* Mobile tabs - horizontal scrollable */}
+        <div className="md:hidden mb-4 overflow-x-auto">
+          <div className="flex gap-1 bg-white rounded-xl shadow-sm border border-gray-200 p-1 min-w-max">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setSelectedTicket(null); }}
+                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
+                  activeTab === tab.id 
+                    ? 'bg-purple-600 text-white' 
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+                {tab.id === 'support' && stats?.open_tickets > 0 && (
+                  <span className="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 text-[10px]">{stats.open_tickets}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="flex gap-6">
-          {/* Sidebar */}
-          <div className="w-56 flex-shrink-0">
+          {/* Sidebar - hidden on mobile */}
+          <div className="hidden md:block w-56 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {tabs.map(tab => (
                 <button
@@ -215,17 +240,17 @@ export default function AdminPanel() {
                 {activeTab === 'users' && (
                   <div>
                     <h2 className="text-2xl font-bold mb-6">{t('adminUsers')} ({users.length})</h2>
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                      <table className="w-full">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden overflow-x-auto">
+                      <table className="w-full min-w-[600px]">
                         <thead className="bg-gray-50">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">ID</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">Email</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminRole')}</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">Accounts</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">Apps</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminDate')}</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminAction')}</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">ID</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">Email</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminRole')}</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">Accounts</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">Apps</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminDate')}</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminAction')}</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -271,16 +296,16 @@ export default function AdminPanel() {
                 {activeTab === 'apps' && (
                   <div>
                     <h2 className="text-2xl font-bold mb-6">{t('adminApps')} ({apps.length})</h2>
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                      <table className="w-full">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden overflow-x-auto">
+                      <table className="w-full min-w-[550px]">
                         <thead className="bg-gray-50">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">Package</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminName')}</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">Status</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">AAB</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('graphics')}</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminOwner')}</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">Package</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminName')}</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">Status</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">AAB</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('graphics')}</th>
+                            <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500">{t('adminOwner')}</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -309,9 +334,9 @@ export default function AdminPanel() {
 
                 {/* Support */}
                 {activeTab === 'support' && (
-                  <div className="flex gap-4 h-[calc(100vh-180px)]">
+                  <div className="flex flex-col md:flex-row gap-4 h-auto md:h-[calc(100vh-180px)]">
                     {/* Ticket list */}
-                    <div className={`${selectedTicket ? 'w-80' : 'w-full'} flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col`}>
+                    <div className={`${selectedTicket ? 'hidden md:flex md:w-80' : 'w-full'} flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col max-h-[50vh] md:max-h-none`}>
                       <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                         <h3 className="font-semibold text-sm">{t('support')} ({tickets.length})</h3>
                       </div>
@@ -354,14 +379,17 @@ export default function AdminPanel() {
 
                     {/* Chat */}
                     {selectedTicket && (
-                      <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
+                      <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden min-h-[60vh] md:min-h-0">
                         {/* Chat header */}
-                        <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                          <div>
-                            <h3 className="font-semibold text-sm">{selectedTicket.subject}</h3>
-                            <p className="text-xs text-gray-500">{selectedTicket.user_email} • {selectedTicket.category}</p>
+                        <div className="px-3 sm:px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between gap-2">
+                          <button onClick={() => setSelectedTicket(null)} className="md:hidden p-1 hover:bg-gray-200 rounded mr-1 flex-shrink-0">
+                            <ArrowLeft className="w-4 h-4" />
+                          </button>
+                          <div className="min-w-0">
+                            <h3 className="font-semibold text-sm truncate">{selectedTicket.subject}</h3>
+                            <p className="text-xs text-gray-500 truncate">{selectedTicket.user_email} • {selectedTicket.category}</p>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-shrink-0">
                             <select
                               value={selectedTicket.status}
                               onChange={(e) => updateTicketStatus(selectedTicket.id, e.target.value)}

@@ -31,11 +31,11 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all"
+        className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all"
       >
-        <Globe className="w-5 h-5 text-gray-600" />
-        <span className="text-2xl">{currentLanguage.flag}</span>
-        <span className="font-medium text-gray-700">{currentLanguage.name}</span>
+        <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+        <span className="text-xl sm:text-2xl">{currentLanguage.flag}</span>
+        <span className="hidden sm:inline font-medium text-gray-700">{currentLanguage.name}</span>
       </button>
 
       {isOpen && (
@@ -44,7 +44,7 @@ export default function LanguageSwitcher() {
             className="fixed inset-0 z-10" 
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-20 max-h-96 overflow-y-auto">
+          <div className="absolute right-0 mt-2 w-48 sm:w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-20 max-h-96 overflow-y-auto">
             {languages.map((lang) => (
               <button
                 key={lang.code}
