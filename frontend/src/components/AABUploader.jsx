@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Upload, File, CheckCircle, AlertCircle, Package } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { appAPI } from '../utils/api';
 
 export default function AABUploader({ packageName, serviceAccountId, onUploadSuccess }) {
   const { t } = useTranslation();
@@ -36,20 +37,8 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
     formData.append('service_account_id', serviceAccountId);
 
     try {
-      const response = await fetch('http://localhost:8000/api/apps/upload-aab', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Yuklashda xatolik');
-      }
-
-      const result = await response.json();
+      const response = await appAPI.uploadAAB(formData);
+      const result = response.data;
       setUploadResult(result);
       
       // Reset form
@@ -59,7 +48,7 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
         onUploadSuccess(result);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.detail || err.message);
     } finally {
       setUploading(false);
     }

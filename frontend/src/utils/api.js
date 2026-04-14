@@ -50,6 +50,9 @@ export const appAPI = {
     params: { language } 
   }),
   delete: (appId) => api.delete(`/api/apps/${appId}`),
+  uploadAAB: (formData) => api.post('/api/apps/upload-aab', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
 };
 
 export const listingAPI = {
