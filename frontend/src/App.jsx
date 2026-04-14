@@ -13,7 +13,7 @@ import { authAPI } from './utils/api';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('isAdmin') === 'true');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,9 +26,12 @@ function App() {
       try {
         const res = await authAPI.getMe();
         setIsAuthenticated(true);
-        setIsAdmin(res.data.is_admin || false);
+        const adminFlag = res.data.is_admin || false;
+        setIsAdmin(adminFlag);
+        localStorage.setItem('isAdmin', String(adminFlag));
       } catch (error) {
         localStorage.removeItem('token');
+        localStorage.removeItem('isAdmin');
         setIsAuthenticated(false);
         setIsAdmin(false);
       }
@@ -39,6 +42,7 @@ function App() {
   const handleLogin = (adminFlag) => {
     setIsAuthenticated(true);
     setIsAdmin(adminFlag || false);
+    localStorage.setItem('isAdmin', String(adminFlag || false));
   };
 
   if (loading) {
@@ -58,7 +62,7 @@ function App() {
         <Route path="/setup" element={isAuthenticated ? <ServiceAccountSetup /> : <Navigate to="/login" />} />
         <Route path="/apps/:serviceAccountId" element={isAuthenticated ? <AppManagement /> : <Navigate to="/login" />} />
         <Route path="/testing/:serviceAccountId" element={isAuthenticated ? <Testing /> : <Navigate to="/login" />} />
-        <Route path="/admin" element={isAuthenticated && isAdmin ? <AdminPanel /> : <Navigate to="/login" />} />
+        <Route path="/admin" element={isAuthenticated && isAdmin ? <AdminPanel /> : isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
         <Route path="/" element={isAuthenticated ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} /> : <Home />} />
       </Routes>
       {isAuthenticated && <SupportWidget />}

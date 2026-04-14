@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, ArrowLeft, CheckCircle, XCircle, FileJson, ExternalLink, Info } from 'lucide-react';
+import { Upload, ArrowLeft, CheckCircle, XCircle, FileJson, ExternalLink, Info, PlayCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { serviceAccountAPI } from '../utils/api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -135,6 +135,29 @@ export default function ServiceAccountSetup() {
                   )}
                 </label>
               </div>
+            </div>
+
+            {/* Video Tutorial */}
+            <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 sm:p-6">
+              <h3 className="text-lg font-bold text-purple-900 flex items-center gap-2 mb-4">
+                <PlayCircle className="w-5 h-5" />
+                {t('videoTutorial') || 'Video qo\'llanma'}
+              </h3>
+              <div className="rounded-lg overflow-hidden bg-black shadow-lg">
+                <video
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="w-full max-h-[400px]"
+                  poster=""
+                >
+                  <source src="/tutorial.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <p className="text-sm text-purple-700 mt-3 text-center">
+                {t('videoTutorialDesc') || 'Yuqoridagi videoda JSON kalitni qanday olish bosqichma-bosqich ko\'rsatilgan'}
+              </p>
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4">

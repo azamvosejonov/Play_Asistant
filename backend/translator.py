@@ -12,11 +12,60 @@ SUPPORTED_LANGUAGES = [
 ]
 
 class TranslationService:
+    LANG_NORMALIZE = {
+        'en-US': 'en', 'en-GB': 'en', 'en-AU': 'en', 'en-IN': 'en',
+        'es-ES': 'es', 'es-US': 'es', 'es-419': 'es',
+        'fr-FR': 'fr', 'fr-CA': 'fr',
+        'de-DE': 'de',
+        'it-IT': 'it',
+        'pt-BR': 'pt', 'pt-PT': 'pt',
+        'ru-RU': 'ru',
+        'ja-JP': 'ja',
+        'ko-KR': 'ko',
+        'tr-TR': 'tr',
+        'ar-SA': 'ar', 'ar-EG': 'ar',
+        'hi-IN': 'hi',
+        'th-TH': 'th',
+        'vi-VN': 'vi',
+        'id-ID': 'id',
+        'ms-MY': 'ms',
+        'pl-PL': 'pl',
+        'uk-UA': 'uk',
+        'nl-NL': 'nl',
+        'sv-SE': 'sv',
+        'da-DK': 'da',
+        'fi-FI': 'fi',
+        'no-NO': 'no',
+        'cs-CZ': 'cs',
+        'ro-RO': 'ro',
+        'hu-HU': 'hu',
+        'el-GR': 'el',
+        'bg-BG': 'bg',
+        'hr-HR': 'hr',
+        'sk-SK': 'sk',
+        'sl-SI': 'sl',
+        'sr-RS': 'sr',
+        'ka-GE': 'ka',
+        'fa-IR': 'fa',
+        'uz-UZ': 'uz',
+    }
+
     def __init__(self):
         pass
     
+    def _normalize_lang(self, lang: str) -> str:
+        if lang in self.LANG_NORMALIZE:
+            return self.LANG_NORMALIZE[lang]
+        if '-' in lang:
+            base = lang.split('-')[0].lower()
+            return base
+        return lang
+    
     def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
         try:
+            source_lang = self._normalize_lang(source_lang)
+            target_lang = self._normalize_lang(target_lang)
+            
             if source_lang == target_lang or not text:
                 return text
             
@@ -27,6 +76,7 @@ class TranslationService:
             return text
     
     def translate_to_all_languages(self, text: str, source_lang: str = 'en') -> Dict[str, str]:
+        source_lang = self._normalize_lang(source_lang)
         translations = {source_lang: text}
         
         for lang in SUPPORTED_LANGUAGES:
@@ -42,6 +92,7 @@ class TranslationService:
     
     def translate_listing(self, title: str, short_desc: str, full_desc: str, 
                          source_lang: str = 'en') -> Dict[str, Dict]:
+        source_lang = self._normalize_lang(source_lang)
         result = {}
         
         for lang in SUPPORTED_LANGUAGES:

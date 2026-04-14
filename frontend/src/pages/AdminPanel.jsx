@@ -23,11 +23,17 @@ export default function AdminPanel() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
+    loadData(true);
+    
+    const interval = setInterval(() => {
+      loadData(false);
+    }, 10000);
+    
+    return () => clearInterval(interval);
   }, [activeTab]);
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = async (showLoading = false) => {
+    if (showLoading) setLoading(true);
     try {
       if (activeTab === 'dashboard') {
         const res = await adminAPI.getStats();

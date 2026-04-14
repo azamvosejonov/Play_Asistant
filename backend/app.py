@@ -1568,6 +1568,8 @@ def admin_update_user(user_id: int, data: dict, admin: models.User = Depends(req
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Foydalanuvchi topilmadi")
+    if user.id == admin.id:
+        raise HTTPException(status_code=400, detail="O'zingizni o'zgartira olmaysiz")
     if 'is_active' in data:
         user.is_active = data['is_active']
     if 'is_admin' in data:
