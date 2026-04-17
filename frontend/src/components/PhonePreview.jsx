@@ -1,6 +1,8 @@
 import { Smartphone, Star, Download, Shield, ChevronRight, Share2, BookmarkPlus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PhonePreview({ title, shortDesc, fullDesc, iconUrl, featureGraphic, screenshots = [] }) {
+  const { t } = useTranslation();
   return (
     <div className="sticky top-8">
       {/* Phone Shell */}
@@ -49,7 +51,7 @@ export default function PhonePreview({ title, shortDesc, fullDesc, iconUrl, feat
                 {featureGraphic ? (
                   <img src={featureGraphic} alt="Feature" className="w-full h-[130px] object-cover"/>
                 ) : (
-                  <div className="w-full h-[130px] bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 flex items-center justify-center">
+                  <div className="w-full h-[130px] bg-white flex items-center justify-center">
                     <div className="text-white/30 text-xs font-medium">Feature Graphic</div>
                   </div>
                 )}
@@ -61,13 +63,13 @@ export default function PhonePreview({ title, shortDesc, fullDesc, iconUrl, feat
                     {iconUrl ? (
                       <img src={iconUrl} alt="Icon" className="w-[52px] h-[52px] rounded-[14px] shadow-md flex-shrink-0"/>
                     ) : (
-                      <div className="w-[52px] h-[52px] rounded-[14px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md flex-shrink-0">
+                      <div className="w-[52px] h-[52px] rounded-[14px] bg-white flex items-center justify-center shadow-md flex-shrink-0">
                         <Smartphone className="w-6 h-6 text-white" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-[15px] text-gray-900 leading-snug truncate">
-                        {title || 'Ilova Nomi'}
+                        {title || t('appTitle')}
                       </h3>
                       <p className="text-[11px] text-green-700 font-medium mt-0.5">Developer Name</p>
                       <div className="flex items-center gap-1 mt-0.5">
@@ -140,7 +142,7 @@ export default function PhonePreview({ title, shortDesc, fullDesc, iconUrl, feat
                       ))
                     ) : (
                       [1, 2, 3].map((i) => (
-                        <div key={i} className="flex-shrink-0 w-[82px] h-[148px] bg-gradient-to-b from-gray-100 to-gray-50 rounded-lg border border-gray-200/60 flex items-center justify-center">
+                        <div key={i} className="flex-shrink-0 w-[82px] h-[148px] bg-white rounded-lg border border-gray-200/60 flex items-center justify-center">
                           <div className="text-center">
                             <div className="w-5 h-5 rounded bg-gray-200 mx-auto mb-1"></div>
                             <span className="text-[7px] text-gray-400">Screen {i}</span>
@@ -161,7 +163,7 @@ export default function PhonePreview({ title, shortDesc, fullDesc, iconUrl, feat
                     <ChevronRight className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-[11px] text-gray-700 leading-[1.6] line-clamp-4">
-                    {shortDesc || fullDesc || 'Ilovangiz haqida qisqa tavsif bu yerda ko\'rinadi. Foydalanuvchilar ilova haqida ma\'lumot o\'qiydi.'}
+                    {shortDesc || fullDesc || t('shortDescription')}
                   </p>
                 </div>
 

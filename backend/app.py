@@ -720,6 +720,125 @@ def full_deploy(
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/ai/quick-generate")
+def ai_quick_generate(
+    data: dict,
+):
+    """Test-drive: Foydalanuvchi faqat ilova nomi va tavsifini yozadi, AI listing yaratadi.
+    Service Account yoki package_name kerak EMAS!"""
+    app_name = data.get('app_name', '').strip()
+    app_description = data.get('app_description', '').strip()
+    target_language = data.get('language', 'en-US')
+    groq_api_key = data.get('groq_api_key', '')
+    
+    if not app_name:
+        raise HTTPException(status_code=400, detail="Ilova nomini kiriting")
+    
+    if not groq_api_key:
+        raise HTTPException(status_code=400, detail="Groq API key kerak")
+    
+    LANGUAGE_NAMES = {
+        'en-US': 'English', 'en-GB': 'English', 'en': 'English',
+        'ru-RU': 'Russian', 'ru': 'Russian',
+        'uz': 'Uzbek', 'uz-UZ': 'Uzbek',
+        'es-ES': 'Spanish', 'es': 'Spanish',
+        'fr-FR': 'French', 'fr': 'French',
+        'de-DE': 'German', 'de': 'German',
+        'tr-TR': 'Turkish', 'tr': 'Turkish',
+        'ar': 'Arabic',
+        'zh-CN': 'Chinese (Simplified)', 'zh-TW': 'Chinese (Traditional)',
+        'ja-JP': 'Japanese', 'ja': 'Japanese',
+        'ko-KR': 'Korean', 'ko': 'Korean',
+    }
+    target_language_name = LANGUAGE_NAMES.get(target_language, target_language)
+    
+    try:
+        from groq import Groq
+        client = Groq(api_key=groq_api_key)
+        
+        context = f"""App name: {app_name}"""
+        if app_description:
+            context += f"\nDeveloper description: {app_description}"
+        context += f"\nTarget language: {target_language} ({target_language_name})"
+        
+        system_prompt = f"""Sen Google Play Store listing mutaxassisi va ASO (App Store Optimization) ekspertisan.
+Foydalanuvchi ilova nomini va qisqa tavsifini berdi. Sening vazifang professional Play Store listing yaratish.
+
+⚠️ MUHIM: title, short_description va full_description FAQAT {target_language_name} tilida yozilishi SHART!
+
+Quyidagi formatda FAQAT JSON qaytarishing kerak:
+{{
+  "title": "max 30 belgi, ilova nomi — {target_language_name} tilida, SEO optimized",
+  "short_description": "max 80 belgi, {target_language_name} tilida, qisqa va jozibali",
+  "full_description": "max 4000 belgi, {target_language_name} tilida, professional tavsif, emoji va formatting bilan, 500+ so'z",
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "category_suggestion": "tavsiya etiladigan kategoriya",
+  "aso_score": 80,
+  "aso_tips": ["ASO maslahat 1", "maslahat 2"]
+}}
+
+Qoidalar:
+- Title 30 belgidan oshmasin
+- Short description 80 belgidan oshmasin
+- Full description professional, emoji va formatting bilan
+- FAQAT JSON format, boshqa hech narsa yo'q"""
+
+        completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": context}
+            ],
+            temperature=0.3,
+            max_tokens=3000,
+            response_format={"type": "json_object"}
+        )
+        
+        ai_response = completion.choices[0].message.content.strip()
+        
+        result = None
+        try:
+            result = json.loads(ai_response)
+        except json.JSONDecodeError:
+            pass
+        
+        if result is None and '```' in ai_response:
+            try:
+                code_block = ai_response.split('```')[1]
+                if code_block.startswith('json'):
+                    code_block = code_block[4:]
+                result = json.loads(code_block.strip())
+            except (json.JSONDecodeError, IndexError):
+                pass
+        
+        if result is None:
+            try:
+                start = ai_response.index('{')
+                end = ai_response.rindex('}') + 1
+                result = json.loads(ai_response[start:end])
+            except (ValueError, json.JSONDecodeError):
+                pass
+        
+        if result is None:
+            return {"success": False, "error": "AI javobini parse qilib bo'lmadi"}
+        
+        if result.get('title') and len(result['title']) > 30:
+            result['title'] = result['title'][:30]
+        if result.get('short_description') and len(result['short_description']) > 80:
+            result['short_description'] = result['short_description'][:80]
+        if result.get('full_description') and len(result['full_description']) > 4000:
+            result['full_description'] = result['full_description'][:4000]
+        
+        return {
+            "success": True,
+            "data": result
+        }
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"AI xatosi: {str(e)}")
+
 @app.post("/api/ai/analyze")
 def ai_analyze_app(
     data: dict,
@@ -1443,10 +1562,34 @@ def require_admin(current_user: models.User = Depends(auth.get_current_user)):
 def startup():
     # Run database migrations
     import sqlite3
+    os.makedirs("data", exist_ok=True)
     db_path = "data/play_deploy.db"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
+    # Barcha jadvallarni yaratish (agar mavjud bo'lmasa)
+    from database import engine, Base
+    Base.metadata.create_all(bind=engine)
+    
+    # Users jadvaliga yangi ustunlar qo'shish
+    cursor.execute("PRAGMA table_info(users)")
+    user_columns = [col[1] for col in cursor.fetchall()]
+    
+    user_columns_to_add = [
+        ("full_name", "TEXT"),
+        ("is_admin", "BOOLEAN DEFAULT 0"),
+        ("is_active", "BOOLEAN DEFAULT 1"),
+    ]
+    
+    for col_name, col_type in user_columns_to_add:
+        if col_name not in user_columns:
+            try:
+                cursor.execute(f"ALTER TABLE users ADD COLUMN {col_name} {col_type}")
+                conn.commit()
+            except Exception:
+                pass
+    
+    # Apps jadvaliga yangi ustunlar qo'shish
     cursor.execute("PRAGMA table_info(apps)")
     columns = [col[1] for col in cursor.fetchall()]
     
@@ -1467,9 +1610,32 @@ def startup():
     
     for col_name, col_type in columns_to_add:
         if col_name not in columns:
-            cursor.execute(f"ALTER TABLE apps ADD COLUMN {col_name} {col_type}")
-            conn.commit()
+            try:
+                cursor.execute(f"ALTER TABLE apps ADD COLUMN {col_name} {col_type}")
+                conn.commit()
+            except Exception:
+                pass
     
+    conn.close()
+    
+    # Feedbacks jadvalini yaratish
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS feedbacks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            feedback_type TEXT NOT NULL,
+            rating INTEGER,
+            reason TEXT,
+            comment TEXT,
+            trigger TEXT,
+            page TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+    conn.commit()
     conn.close()
     
     # Create admin user
@@ -1739,6 +1905,93 @@ def update_ticket_status(ticket_id: int, data: dict, current_user: models.User =
     ticket.status = data.get('status', ticket.status)
     db.commit()
     return {"success": True}
+
+## ===================== FEEDBACK TIZIMI ===================== ##
+
+@app.post("/api/feedback")
+def submit_feedback(
+    data: dict,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Feedback yuborish — emoji, NPS yoki exit intent"""
+    feedback = models.Feedback(
+        user_id=current_user.id,
+        feedback_type=data.get('feedback_type', 'emoji'),
+        rating=data.get('rating'),
+        reason=data.get('reason'),
+        comment=data.get('comment'),
+        trigger=data.get('trigger', 'general'),
+        page=data.get('page')
+    )
+    db.add(feedback)
+    db.commit()
+    return {"success": True, "id": feedback.id}
+
+@app.post("/api/feedback/anonymous")
+def submit_anonymous_feedback(data: dict):
+    """Login qilmagan foydalanuvchi uchun anonymous feedback (exit intent)"""
+    from database import SessionLocal
+    db = SessionLocal()
+    try:
+        feedback = models.Feedback(
+            user_id=None,
+            feedback_type=data.get('feedback_type', 'exit_intent'),
+            rating=data.get('rating'),
+            reason=data.get('reason'),
+            comment=data.get('comment'),
+            trigger=data.get('trigger', 'exit'),
+            page=data.get('page')
+        )
+        db.add(feedback)
+        db.commit()
+        return {"success": True}
+    finally:
+        db.close()
+
+@app.get("/api/admin/feedbacks")
+def admin_feedbacks(admin: models.User = Depends(require_admin), db: Session = Depends(get_db)):
+    """Admin uchun barcha feedbacklar"""
+    feedbacks = db.query(models.Feedback).order_by(models.Feedback.created_at.desc()).limit(200).all()
+    result = []
+    for f in feedbacks:
+        user = db.query(models.User).filter(models.User.id == f.user_id).first() if f.user_id else None
+        result.append({
+            "id": f.id,
+            "user_email": user.email if user else "Anonymous",
+            "feedback_type": f.feedback_type,
+            "rating": f.rating,
+            "reason": f.reason,
+            "comment": f.comment,
+            "trigger": f.trigger,
+            "page": f.page,
+            "created_at": str(f.created_at)
+        })
+    
+    # Statistika
+    total = db.query(models.Feedback).count()
+    emoji_avg = db.query(models.Feedback).filter(
+        models.Feedback.feedback_type == 'emoji',
+        models.Feedback.rating.isnot(None)
+    ).all()
+    nps_scores = db.query(models.Feedback).filter(
+        models.Feedback.feedback_type == 'nps',
+        models.Feedback.rating.isnot(None)
+    ).all()
+    exit_count = db.query(models.Feedback).filter(models.Feedback.feedback_type == 'exit_intent').count()
+    
+    avg_emoji = sum(f.rating for f in emoji_avg) / len(emoji_avg) if emoji_avg else 0
+    avg_nps = sum(f.rating for f in nps_scores) / len(nps_scores) if nps_scores else 0
+    
+    return {
+        "feedbacks": result,
+        "stats": {
+            "total": total,
+            "avg_emoji": round(avg_emoji, 1),
+            "avg_nps": round(avg_nps, 1),
+            "exit_intents": exit_count
+        }
+    }
 
 if __name__ == "__main__":
     import uvicorn

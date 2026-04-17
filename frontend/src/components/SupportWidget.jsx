@@ -92,10 +92,10 @@ export default function SupportWidget() {
   };
 
   const statusLabels = {
-    open: '🔵 Ochiq',
-    in_progress: '🟡 Jarayonda',
-    resolved: '🟢 Hal qilindi',
-    closed: '⚪ Yopilgan',
+    open: 'Open',
+    in_progress: 'In Progress',
+    resolved: 'Resolved',
+    closed: 'Closed',
   };
 
   return (
@@ -103,7 +103,7 @@ export default function SupportWidget() {
       {/* Floating button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 bg-purple-600 text-white rounded-full shadow-xl hover:bg-purple-700 transition-all flex items-center justify-center"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 bg-black text-white rounded-full shadow-xl hover:bg-neutral-800 transition-all flex items-center justify-center"
       >
         {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
         {!isOpen && unread > 0 && (
@@ -115,10 +115,10 @@ export default function SupportWidget() {
       {isOpen && (
         <div className="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 z-50 w-full sm:w-96 h-full sm:h-[520px] bg-white sm:rounded-2xl shadow-2xl sm:border border-gray-200 flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="bg-purple-600 text-white px-4 py-3 flex items-center justify-between">
+          <div className="bg-black text-white px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               {view !== 'list' && (
-                <button onClick={() => { setView('list'); setSelectedTicket(null); }} className="p-1 hover:bg-purple-500 rounded">
+                <button onClick={() => { setView('list'); setSelectedTicket(null); }} className="p-1 hover:bg-neutral-800 rounded">
                   <ChevronLeft className="w-5 h-5" />
                 </button>
               )}
@@ -134,7 +134,7 @@ export default function SupportWidget() {
             <div className="flex-1 overflow-y-auto">
               <button
                 onClick={() => setView('new')}
-                className="w-full flex items-center gap-3 px-4 py-3 text-purple-600 font-semibold hover:bg-purple-50 border-b border-gray-100"
+                className="w-full flex items-center gap-3 px-4 py-3 text-black font-semibold hover:bg-gray-50 border-b border-gray-100"
               >
                 <Plus className="w-5 h-5" />
                 {t('newTicket')}
@@ -171,7 +171,7 @@ export default function SupportWidget() {
                   value={newSubject}
                   onChange={(e) => setNewSubject(e.target.value)}
                   placeholder={t('subject')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
                 />
               </div>
               <div>
@@ -194,13 +194,13 @@ export default function SupportWidget() {
                   onChange={(e) => setNewBody(e.target.value)}
                   placeholder={t('writeMessage')}
                   rows={5}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-black"
                 />
               </div>
               <button
                 onClick={createTicket}
                 disabled={!newSubject.trim() || !newBody.trim() || loading}
-                className="w-full py-2.5 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-black text-white rounded-lg font-semibold hover:bg-neutral-800 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
                 {t('send')}
@@ -217,11 +217,11 @@ export default function SupportWidget() {
                     <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 ${
                       m.is_admin 
                         ? 'bg-gray-100 text-gray-800 rounded-bl-md' 
-                        : 'bg-purple-600 text-white rounded-br-md'
+                        : 'bg-black text-white rounded-br-md'
                     }`}>
-                      {m.is_admin && <p className="text-xs font-semibold text-purple-600 mb-0.5">👨‍💼 Admin</p>}
+                      {m.is_admin && <p className="text-xs font-semibold text-gray-500 mb-0.5">Admin</p>}
                       <p className="text-sm whitespace-pre-wrap">{m.message}</p>
-                      <p className={`text-xs mt-1 ${m.is_admin ? 'text-gray-400' : 'text-purple-200'}`}>
+                      <p className={`text-xs mt-1 ${m.is_admin ? 'text-gray-400' : 'text-black'}`}>
                         {new Date(m.created_at).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
@@ -238,12 +238,12 @@ export default function SupportWidget() {
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                       placeholder={t('writeMessage')}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
                     />
                     <button
                       onClick={sendMessage}
                       disabled={!newMessage.trim()}
-                      className="px-3 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50"
+                      className="px-3 py-2 bg-black text-white rounded-xl hover:bg-neutral-800 disabled:opacity-50"
                     >
                       <Send className="w-4 h-4" />
                     </button>

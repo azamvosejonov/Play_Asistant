@@ -1,4 +1,5 @@
 import { AlertTriangle, CheckCircle, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function ConfirmDialog({ 
   title, 
@@ -6,10 +7,13 @@ export default function ConfirmDialog({
   details, 
   onConfirm, 
   onCancel, 
-  confirmText = "Tasdiqlash",
-  cancelText = "Bekor qilish",
+  confirmText,
+  cancelText,
   type = "warning" // warning, success, danger
 }) {
+  const { t } = useTranslation();
+  const finalConfirmText = confirmText || t('confirm');
+  const finalCancelText = cancelText || t('cancel');
   const colors = {
     warning: {
       bg: 'bg-yellow-50',
@@ -18,10 +22,10 @@ export default function ConfirmDialog({
       button: 'bg-yellow-600 hover:bg-yellow-700'
     },
     success: {
-      bg: 'bg-green-50',
-      border: 'border-green-200',
-      icon: 'text-green-600',
-      button: 'bg-green-600 hover:bg-green-700'
+      bg: 'bg-gray-50',
+      border: 'border-gray-200',
+      icon: 'text-gray-900',
+      button: 'bg-black hover:bg-neutral-800'
     },
     danger: {
       bg: 'bg-red-50',
@@ -57,11 +61,11 @@ export default function ConfirmDialog({
         {/* Details */}
         {details && (
           <div className="mb-4 bg-gray-50 rounded-lg p-4 max-h-40 overflow-y-auto">
-            <p className="text-xs font-semibold text-gray-600 mb-2">Ma'lumotlar:</p>
+            <p className="text-xs font-semibold text-gray-600 mb-2">{t('note')}:</p>
             <ul className="text-sm text-gray-700 space-y-1">
               {details.map((detail, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="text-primary-600">•</span>
+                  <span className="text-black">•</span>
                   <span>{detail}</span>
                 </li>
               ))}
@@ -75,13 +79,13 @@ export default function ConfirmDialog({
             onClick={onCancel}
             className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium transition-all"
           >
-            {cancelText}
+            {finalCancelText}
           </button>
           <button
             onClick={onConfirm}
             className={`flex-1 px-4 py-2 text-white rounded-lg font-medium transition-all ${color.button}`}
           >
-            {confirmText}
+            {finalConfirmText}
           </button>
         </div>
       </div>

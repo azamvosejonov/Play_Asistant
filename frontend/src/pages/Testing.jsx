@@ -78,10 +78,10 @@ export default function Testing() {
       );
       setTrackStatus(response.data);
       if (!response.data.test_allowed) {
-        setTrackError(response.data.error || 'Test ruxsati yo\'q');
+        setTrackError(response.data.error || t('noTestPermissionShort'));
       }
     } catch (err) {
-      const detail = err.response?.data?.detail || 'Xatolik yuz berdi';
+      const detail = err.response?.data?.detail || t('errorOccurred');
       setTrackError(detail);
       setTrackStatus(null);
     } finally {
@@ -114,11 +114,11 @@ export default function Testing() {
       const response = await testingAPI.addTesters(
         selectedApp.package_name, emailList, track, serviceAccountId
       );
-      setSuccess(`✅ ${emailList.length} ta tester qo'shildi!`);
+      setSuccess(` ${emailList.length} ${t('testersAdded')}`);
       if (response.data.test_link) setTestLink(response.data.test_link);
       setEmails('');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('errorOccurred'));
     } finally {
       setAddingTesters(false);
     }
@@ -133,11 +133,11 @@ export default function Testing() {
       const response = await testingAPI.createRelease(
         selectedApp.package_name, track, releaseNotes, serviceAccountId
       );
-      setSuccess('✅ Test release yaratildi!');
+      setSuccess(` ${t('releaseCreated')}`);
       if (response.data.test_link) setTestLink(response.data.test_link);
       checkTrackStatus();
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('errorOccurred'));
     } finally {
       setCreatingRelease(false);
     }
@@ -152,7 +152,7 @@ export default function Testing() {
       );
       setTestLink(response.data.test_link);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('errorOccurred'));
     } finally {
       setLoadingLink(false);
     }
@@ -160,14 +160,14 @@ export default function Testing() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(testLink);
-    setSuccess('✅ Link nusxalandi!');
+    setSuccess(` ${t('linkCopied')}`);
     setTimeout(() => setSuccess(''), 2000);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50">
-        <Loader2 className="w-10 h-10 text-purple-600 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
       </div>
     );
   }
@@ -177,7 +177,7 @@ export default function Testing() {
   const showContent = !checkingTrack && testAllowed;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -192,7 +192,7 @@ export default function Testing() {
               </button>
               <div className="h-5 w-px bg-gray-200"></div>
               <div className="flex items-center gap-2">
-                <TestTube className="w-5 h-5 text-purple-600" />
+                <TestTube className="w-5 h-5 text-black" />
                 <h1 className="text-base sm:text-lg font-bold text-gray-900">{t('testing')}</h1>
               </div>
             </div>
@@ -206,16 +206,16 @@ export default function Testing() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Messages */}
         {success && (
-          <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center gap-2 text-sm">
-            <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-            <p className="text-green-800">{success}</p>
+          <div className="mb-4 bg-black border border-black rounded-lg p-3 flex items-center gap-2 text-sm">
+            <CheckCircle className="w-4 h-4 text-black flex-shrink-0" />
+            <p className="text-black">{success}</p>
           </div>
         )}
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-center gap-2 text-sm">
-            <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
-            <p className="text-red-800">{error}</p>
-            <button onClick={() => setError('')} className="ml-auto text-red-400 hover:text-red-600">✕</button>
+            <AlertCircle className="w-4 h-4 text-black flex-shrink-0" />
+            <p className="text-black">{error}</p>
+            <button onClick={() => setError('')} className="ml-auto text-black hover:text-black">✕</button>
           </div>
         )}
 
@@ -226,7 +226,7 @@ export default function Testing() {
               <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                   <Package className="w-3.5 h-3.5" />
-                  Ilovalar
+                  {t('apps')}
                 </h2>
               </div>
               <div className="p-2 max-h-[400px] overflow-y-auto">
@@ -247,7 +247,7 @@ export default function Testing() {
                       }}
                       className={`w-full text-left p-2.5 rounded-lg transition-all text-sm mb-1 ${
                         selectedApp?.id === app.id
-                          ? 'bg-purple-50 border border-purple-200 shadow-sm'
+                          ? 'bg-black border border-black shadow-sm'
                           : 'hover:bg-gray-50 border border-transparent'
                       }`}
                     >
@@ -263,8 +263,8 @@ export default function Testing() {
             {selectedApp && !checkingTrack && trackStatus && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-                  <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Track Holati</h2>
-                  <button onClick={checkTrackStatus} className="text-purple-500 hover:text-purple-700">
+                  <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('trackStatus')}</h2>
+                  <button onClick={checkTrackStatus} className="text-black hover:text-black">
                     <RefreshCw className="w-3 h-3" />
                   </button>
                 </div>
@@ -298,8 +298,8 @@ export default function Testing() {
               </div>
             ) : checkingTrack ? (
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 sm:p-16 text-center">
-                <Loader2 className="w-8 h-8 text-purple-500 animate-spin mx-auto mb-3" />
-                <p className="text-gray-500 text-sm">Track holati tekshirilmoqda...</p>
+                <Loader2 className="w-8 h-8 text-black animate-spin mx-auto mb-3" />
+                <p className="text-gray-500 text-sm">{t('trackChecking')}</p>
                 <p className="text-gray-400 text-xs mt-1">{selectedApp.package_name}</p>
               </div>
             ) : trackError && !testAllowed ? (
@@ -308,20 +308,20 @@ export default function Testing() {
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Lock className="w-8 h-8 text-orange-500" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Test Ruxsati Yo'q</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">{t('noTestPermission')}</h2>
                 <p className="text-gray-500 mb-6 max-w-sm mx-auto text-sm">
-                  Bu ilova uchun Play Console'da test track sozlanmagan. Quyidagi qadamlarni bajaring:
+                  {t('noTestPermissionDesc')}
                 </p>
                 <div className="bg-gray-50 rounded-lg p-5 max-w-sm mx-auto text-left space-y-2">
                   {[
-                    'Play Console\'ga kiring',
-                    'Ilovangizni tanlang',
-                    'Testing → Internal testing ochish',
-                    'Tester ro\'yxati yarating',
-                    'AAB faylni yuklang va release chiqaring'
+                    t('testStep1'),
+                    t('testStep2'),
+                    t('testStep3'),
+                    t('testStep4'),
+                    t('testStep5')
                   ].map((step, i) => (
                     <div key={i} className="flex items-start gap-2">
-                      <span className="w-5 h-5 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
+                      <span className="w-5 h-5 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
                       <span className="text-sm text-gray-700">{step}</span>
                     </div>
                   ))}
@@ -331,10 +331,10 @@ export default function Testing() {
                 )}
                 <button
                   onClick={checkTrackStatus}
-                  className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium inline-flex items-center gap-2"
+                  className="mt-6 px-6 py-2 bg-black text-white rounded-lg hover:bg-neutral-800 text-sm font-medium inline-flex items-center gap-2"
                 >
                   <RefreshCw className="w-4 h-4" />
-                  Qayta tekshirish
+                  {t('recheckBtn')}
                 </button>
               </div>
             ) : testAllowed ? (
@@ -342,10 +342,10 @@ export default function Testing() {
                 {/* Tabs */}
                 <div className="flex gap-1 mb-5 bg-white rounded-lg p-1 shadow-sm border border-gray-100">
                   {[
-                    { id: 'testers', label: 'Testerlar', icon: Users, color: 'blue' },
-                    { id: 'release', label: 'Release', icon: Send, color: 'green' },
-                    { id: 'link', label: 'Test Link', icon: LinkIcon, color: 'purple' },
-                    { id: 'stats', label: 'Statistika', icon: BarChart3, color: 'orange' },
+                    { id: 'testers', label: t('testersTab'), icon: Users, color: 'blue' },
+                    { id: 'release', label: t('releaseTab'), icon: Send, color: 'green' },
+                    { id: 'link', label: t('testLinkTab'), icon: LinkIcon, color: 'purple' },
+                    { id: 'stats', label: t('statsTab'), icon: BarChart3, color: 'orange' },
                   ].map((tab) => (
                     <button
                       key={tab.id}
@@ -355,7 +355,7 @@ export default function Testing() {
                       }}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-medium transition-all ${
                         activeTab === tab.id
-                          ? 'bg-purple-600 text-white shadow-sm'
+                          ? 'bg-black text-white shadow-sm'
                           : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                       }`}
                     >
@@ -373,33 +373,33 @@ export default function Testing() {
                         <Users className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <h2 className="text-base font-bold text-gray-900">Testerlar Qo'shish</h2>
-                        <p className="text-xs text-gray-400">Testerlar Play Market orqali ilovani yuklab test qiladi</p>
+                        <h2 className="text-base font-bold text-gray-900">{t('addTestersTitle')}</h2>
+                        <p className="text-xs text-gray-400">{t('addTestersDesc')}</p>
                       </div>
                     </div>
 
                     <div className="mb-4">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Track</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{t('trackLabel')}</label>
                       <select
                         value={track}
                         onChange={(e) => setTrack(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-black focus:border-transparent outline-none"
                       >
-                        <option value="internal">Internal Testing (Ichki)</option>
-                        <option value="alpha">Closed Testing (Yopiq)</option>
-                        <option value="beta">Open Testing (Ochiq)</option>
+                        <option value="internal">{t('internalTesting')}</option>
+                        <option value="alpha">{t('closedTesting')}</option>
+                        <option value="beta">{t('openTesting')}</option>
                       </select>
                     </div>
 
                     <textarea
                       value={emails}
                       onChange={(e) => setEmails(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none font-mono text-sm bg-gray-50"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none font-mono text-sm bg-gray-50"
                       rows={5}
                       placeholder={"test1@gmail.com\ntest2@gmail.com"}
                     />
                     <p className="text-[10px] text-gray-400 mt-1">
-                      {emails.split('\n').filter(e => e.trim()).length} ta email
+                      {emails.split('\n').filter(e => e.trim()).length} {t('emailCount')}
                     </p>
                     <button
                       onClick={handleAddTesters}
@@ -407,7 +407,7 @@ export default function Testing() {
                       className="mt-3 w-full py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium text-sm flex items-center justify-center gap-2"
                     >
                       {addingTesters ? <Loader2 className="w-4 h-4 animate-spin" /> : <Users className="w-4 h-4" />}
-                      {addingTesters ? 'Qo\'shilmoqda...' : 'Tester Qo\'shish'}
+                      {addingTesters ? t('addingTesters') : t('addTestersBtn')}
                     </button>
                   </div>
                 )}
@@ -416,42 +416,42 @@ export default function Testing() {
                 {activeTab === 'release' && (
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-5">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <Send className="w-5 h-5 text-green-600" />
+                      <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                        <Send className="w-5 h-5 text-black" />
                       </div>
                       <div>
-                        <h2 className="text-base font-bold text-gray-900">Test Release</h2>
-                        <p className="text-xs text-gray-400">AAB faylni test track'iga yuborish</p>
+                        <h2 className="text-base font-bold text-gray-900">{t('testReleaseTitle')}</h2>
+                        <p className="text-xs text-gray-400">{t('testReleaseDesc')}</p>
                       </div>
                     </div>
 
                     <div className="mb-4">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Track</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{t('trackLabel')}</label>
                       <select
                         value={track}
                         onChange={(e) => setTrack(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-black focus:border-transparent outline-none"
                       >
-                        <option value="internal">Internal Testing</option>
-                        <option value="alpha">Closed Testing</option>
-                        <option value="beta">Open Testing</option>
+                        <option value="internal">{t('internalTesting')}</option>
+                        <option value="alpha">{t('closedTesting')}</option>
+                        <option value="beta">{t('openTesting')}</option>
                       </select>
                     </div>
 
                     <textarea
                       value={releaseNotes}
                       onChange={(e) => setReleaseNotes(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-sm bg-gray-50"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none text-sm bg-gray-50"
                       rows={4}
-                      placeholder={"Yangiliklar:\n- Bug fixes\n- Yangi funksiyalar"}
+                      placeholder={t('releaseNotesPlaceholder')}
                     />
                     <button
                       onClick={handleCreateRelease}
                       disabled={creatingRelease || !releaseNotes.trim()}
-                      className="mt-3 w-full py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium text-sm flex items-center justify-center gap-2"
+                      className="mt-3 w-full py-2.5 bg-black text-white rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium text-sm flex items-center justify-center gap-2"
                     >
                       {creatingRelease ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                      {creatingRelease ? 'Yaratilmoqda...' : 'Release Yuborish'}
+                      {creatingRelease ? t('creatingRelease') : t('sendRelease')}
                     </button>
                   </div>
                 )}
@@ -460,40 +460,40 @@ export default function Testing() {
                 {activeTab === 'link' && (
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-5">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <LinkIcon className="w-5 h-5 text-purple-600" />
+                      <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                        <LinkIcon className="w-5 h-5 text-black" />
                       </div>
                       <div>
-                        <h2 className="text-base font-bold text-gray-900">Test Link</h2>
-                        <p className="text-xs text-gray-400">Testerlarga yuboring — Play Market'dan yuklaydi</p>
+                        <h2 className="text-base font-bold text-gray-900">{t('testLinkTitle')}</h2>
+                        <p className="text-xs text-gray-400">{t('testLinkDesc')}</p>
                       </div>
                     </div>
 
                     <div className="mb-4">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Track</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{t('trackLabel')}</label>
                       <select
                         value={track}
                         onChange={(e) => { setTrack(e.target.value); setTestLink(''); }}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-black focus:border-transparent outline-none"
                       >
-                        <option value="internal">Internal Testing</option>
-                        <option value="alpha">Closed Testing</option>
-                        <option value="beta">Open Testing</option>
+                        <option value="internal">{t('internalTesting')}</option>
+                        <option value="alpha">{t('closedTesting')}</option>
+                        <option value="beta">{t('openTesting')}</option>
                       </select>
                     </div>
 
                     {testLink ? (
                       <div className="space-y-3">
-                        <div className="bg-purple-50 border border-purple-100 rounded-lg p-4">
-                          <p className="text-[10px] text-purple-500 mb-1.5 font-medium uppercase tracking-wider">Test Link</p>
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                          <p className="text-[10px] text-gray-500 mb-1.5 font-medium uppercase tracking-wider">Test Link</p>
                           <div className="flex gap-2">
                             <input
                               type="text"
                               value={testLink}
                               readOnly
-                              className="flex-1 px-3 py-2 bg-white border border-purple-200 rounded-lg text-xs font-mono"
+                              className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs font-mono"
                             />
-                            <button onClick={copyLink} className="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                            <button onClick={copyLink} className="px-3 py-2 bg-black text-white rounded-lg hover:bg-neutral-800 transition">
                               <Copy className="w-4 h-4" />
                             </button>
                           </div>
@@ -502,25 +502,25 @@ export default function Testing() {
                           href={testLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block w-full py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium text-sm text-center"
+                          className="block w-full py-2.5 bg-black text-white rounded-lg hover:bg-neutral-800 transition font-medium text-sm text-center"
                         >
-                          Play Market'da Ochish →
+                          {t('openInPlayMarket')} →
                         </a>
                       </div>
                     ) : (
                       <button
                         onClick={handleGetLink}
                         disabled={loadingLink}
-                        className="w-full py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition font-medium text-sm flex items-center justify-center gap-2"
+                        className="w-full py-2.5 bg-black text-white rounded-lg hover:bg-neutral-800 disabled:opacity-50 transition font-medium text-sm flex items-center justify-center gap-2"
                       >
                         {loadingLink ? <Loader2 className="w-4 h-4 animate-spin" /> : <LinkIcon className="w-4 h-4" />}
-                        {loadingLink ? 'Yuklanmoqda...' : 'Test Link Olish'}
+                        {loadingLink ? t('loading') : t('getTestLink')}
                       </button>
                     )}
 
                     <div className="mt-4 bg-amber-50 border border-amber-100 rounded-lg p-3">
                       <p className="text-xs text-amber-700">
-                        <strong>Eslatma:</strong> Tester linkni ochib "Tester bo'lish" tugmasini bosishi va keyin ilovani yuklab olishi kerak.
+                        <strong>{t('note')}:</strong> {t('testLinkNote')}
                       </p>
                     </div>
                   </div>
@@ -531,16 +531,16 @@ export default function Testing() {
                   <div className="space-y-4">
                     {loadingStats ? (
                       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-12 text-center">
-                        <Loader2 className="w-8 h-8 text-purple-500 animate-spin mx-auto mb-3" />
-                        <p className="text-gray-400 text-sm">Statistika yuklanmoqda...</p>
+                        <Loader2 className="w-8 h-8 text-black animate-spin mx-auto mb-3" />
+                        <p className="text-gray-400 text-sm">{t('statsLoading')}</p>
                       </div>
                     ) : stats ? (
                       <>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           {[
-                            { label: 'Reyting', value: stats.average_rating || '—', sub: '/5', icon: Star, color: 'yellow' },
-                            { label: 'Sharhlar', value: stats.total_reviews || 0, sub: '', icon: MessageSquare, color: 'blue' },
-                            { label: 'Track\'lar', value: trackStatus ? Object.values(trackStatus.tracks || {}).filter(t => t.has_active).length : '—', sub: ' active', icon: Download, color: 'green' },
+                            { label: t('ratingLabel'), value: stats.average_rating || '—', sub: '/5', icon: Star, color: 'yellow' },
+                            { label: t('reviewsLabel'), value: stats.total_reviews || 0, sub: '', icon: MessageSquare, color: 'blue' },
+                            { label: t('tracksLabel'), value: trackStatus ? Object.values(trackStatus.tracks || {}).filter(tr2 => tr2.has_active).length : '—', sub: ' active', icon: Download, color: 'green' },
                           ].map((card, i) => (
                             <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                               <div className="flex items-center gap-2 mb-2">
@@ -558,10 +558,10 @@ export default function Testing() {
                           <div className="flex items-center justify-between mb-4">
                             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
                               <MessageSquare className="w-4 h-4 text-blue-500" />
-                              So'nggi Sharhlar
+                              {t('latestReviews')}
                             </h3>
-                            <button onClick={fetchStats} className="text-xs text-purple-600 hover:text-purple-800 flex items-center gap-1">
-                              <RefreshCw className="w-3 h-3" /> Yangilash
+                            <button onClick={fetchStats} className="text-xs text-black hover:text-black flex items-center gap-1">
+                              <RefreshCw className="w-3 h-3" /> {t('refreshBtn')}
                             </button>
                           </div>
                           {stats.reviews && stats.reviews.length > 0 ? (
@@ -576,14 +576,14 @@ export default function Testing() {
                                       ))}
                                     </div>
                                   </div>
-                                  <p className="text-xs text-gray-600">{review.text || 'Sharh matni yo\'q'}</p>
+                                  <p className="text-xs text-gray-600">{review.text || t('noReviewText')}</p>
                                 </div>
                               ))}
                             </div>
                           ) : (
                             <div className="text-center py-8">
                               <MessageSquare className="w-8 h-8 text-gray-200 mx-auto mb-2" />
-                              <p className="text-gray-400 text-xs">Hozircha sharhlar yo'q</p>
+                              <p className="text-gray-400 text-xs">{t('noReviewsYet')}</p>
                             </div>
                           )}
                         </div>
@@ -591,9 +591,9 @@ export default function Testing() {
                     ) : (
                       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-12 text-center">
                         <BarChart3 className="w-10 h-10 text-gray-200 mx-auto mb-3" />
-                        <p className="text-gray-400 text-sm mb-4">Statistikani ko'rish</p>
-                        <button onClick={fetchStats} className="px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm">
-                          Yuklash
+                        <p className="text-gray-400 text-sm mb-4">{t('viewStats')}</p>
+                        <button onClick={fetchStats} className="px-5 py-2 bg-black text-white rounded-lg hover:bg-neutral-800 text-sm">
+                          {t('loadBtn')}
                         </button>
                       </div>
                     )}

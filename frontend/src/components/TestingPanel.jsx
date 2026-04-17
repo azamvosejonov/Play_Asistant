@@ -15,7 +15,7 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
 
   const handleAddTesters = async () => {
     if (!emails.trim()) {
-      setError('Email kiriting!');
+      setError(t('invalidEmail'));
       return;
     }
 
@@ -38,11 +38,11 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
         }
       );
 
-      setSuccess(`✅ ${emailList.length} ta tester qo'shildi!`);
+      setSuccess(` ${emailList.length} ${t('testersAdded')}`);
       setTestLink(response.data.test_link);
       setEmails('');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('errorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,7 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
 
   const handleCreateRelease = async () => {
     if (!releaseNotes.trim()) {
-      setError('Release notes kiriting!');
+      setError(t('required'));
       return;
     }
 
@@ -72,10 +72,10 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
         }
       );
 
-      setSuccess('✅ Test release yaratildi!');
+      setSuccess(t('releaseCreated'));
       setTestLink(response.data.test_link);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('errorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
 
       setTestLink(response.data.test_link);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Xatolik yuz berdi');
+      setError(err.response?.data?.detail || t('errorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -102,23 +102,23 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
 
   const copyLink = () => {
     navigator.clipboard.writeText(testLink);
-    setSuccess('✅ Link nusxalandi!');
+    setSuccess(t('linkCopied'));
     setTimeout(() => setSuccess(''), 2000);
   };
 
   return (
-    <div className="bg-white rounded-lg border-2 border-purple-200 p-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center gap-3 mb-6">
-        <TestTube className="w-6 h-6 text-purple-600" />
-        <h3 className="text-xl font-bold text-purple-900">Testing</h3>
+        <TestTube className="w-6 h-6 text-gray-900" />
+        <h3 className="text-xl font-bold text-gray-900">{t('testingTitle')}</h3>
       </div>
 
       {/* Success Message */}
       {success && (
-        <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="mb-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-            <p className="text-green-800 font-medium">{success}</p>
+            <CheckCircle className="w-5 h-5 text-gray-900" />
+            <p className="text-gray-900 font-medium">{success}</p>
           </div>
         </div>
       )}
@@ -128,7 +128,7 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
         <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-5 h-5 text-red-600" />
-            <p className="text-red-800 font-medium">{error}</p>
+            <p className="text-red-700 font-medium">{error}</p>
           </div>
         </div>
       )}
@@ -143,12 +143,12 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
           onChange={(e) => setTrack(e.target.value)}
           className="input"
         >
-          <option value="internal">Internal Testing (Ichki test)</option>
-          <option value="alpha">Closed Testing (Yopiq test)</option>
-          <option value="beta">Open Testing (Ochiq test)</option>
+          <option value="internal">{t('internalTesting')}</option>
+          <option value="alpha">{t('closedTesting')}</option>
+          <option value="beta">{t('openTesting')}</option>
         </select>
         <p className="text-xs text-gray-500 mt-1">
-          Internal: Eng tez, 100 tagacha tester
+          Internal: max 100 testers
         </p>
       </div>
 
@@ -156,7 +156,7 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
       <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
         <div className="flex items-center gap-2 mb-3">
           <Users className="w-5 h-5 text-blue-600" />
-          <h4 className="font-semibold text-blue-900">1. Testerlar Qo'shish</h4>
+          <h4 className="font-semibold text-blue-900">1. {t('addTestersTitle')}</h4>
         </div>
         <textarea
           value={emails}
@@ -171,38 +171,38 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
           className="btn btn-primary w-full flex items-center justify-center gap-2"
         >
           <Users className="w-5 h-5" />
-          {loading ? 'Qo\'shilmoqda...' : 'Testerlarni Qo\'shish'}
+          {loading ? t('addingTesters') : t('addTestersBtn')}
         </button>
       </div>
 
       {/* Create Release */}
-      <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+      <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex items-center gap-2 mb-3">
-          <Send className="w-5 h-5 text-green-600" />
-          <h4 className="font-semibold text-green-900">2. Test Release Yaratish</h4>
+          <Send className="w-5 h-5 text-gray-900" />
+          <h4 className="font-semibold text-gray-900">2. {t('createReleaseTitle')}</h4>
         </div>
         <textarea
           value={releaseNotes}
           onChange={(e) => setReleaseNotes(e.target.value)}
           className="input mb-3"
           rows={3}
-          placeholder="Release notes (masalan: Bug fixes, yangi funksiyalar...)"
+          placeholder={t('releaseNotesPlaceholder')}
         />
         <button
           onClick={handleCreateRelease}
           disabled={loading || !releaseNotes.trim()}
-          className="btn bg-green-600 text-white hover:bg-green-700 w-full flex items-center justify-center gap-2"
+          className="btn bg-black text-white hover:bg-neutral-800 w-full flex items-center justify-center gap-2"
         >
           <Send className="w-5 h-5" />
-          {loading ? 'Yaratilmoqda...' : 'Release Yaratish'}
+          {loading ? t('creatingRelease') : t('createReleaseBtn')}
         </button>
       </div>
 
       {/* Test Link */}
-      <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+      <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex items-center gap-2 mb-3">
-          <LinkIcon className="w-5 h-5 text-purple-600" />
-          <h4 className="font-semibold text-purple-900">3. Test Link</h4>
+          <LinkIcon className="w-5 h-5 text-gray-900" />
+          <h4 className="font-semibold text-gray-900">3. {t('testLinkSection')}</h4>
         </div>
         
         {testLink ? (
@@ -219,17 +219,17 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
                 className="btn btn-secondary flex items-center gap-2"
               >
                 <Copy className="w-4 h-4" />
-                Nusxa
+                {t('copyBtn')}
               </button>
             </div>
             <a
               href={testLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn bg-purple-600 text-white hover:bg-purple-700 w-full flex items-center justify-center gap-2"
+              className="btn bg-black text-white hover:bg-neutral-800 w-full flex items-center justify-center gap-2"
             >
               <LinkIcon className="w-5 h-5" />
-              Test Linkini Ochish
+              {t('openTestLink')}
             </a>
           </div>
         ) : (
@@ -239,20 +239,20 @@ export default function TestingPanel({ selectedApp, serviceAccountId }) {
             className="btn btn-secondary w-full flex items-center justify-center gap-2"
           >
             <LinkIcon className="w-5 h-5" />
-            {loading ? 'Yuklanmoqda...' : 'Link Olish'}
+            {loading ? t('loading') : t('getLinkBtn')}
           </button>
         )}
       </div>
 
       {/* Instructions */}
       <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-        <h4 className="font-semibold text-yellow-900 mb-2">📝 Qo'llanma:</h4>
+        <h4 className="font-semibold text-yellow-900 mb-2">{t('note')}:</h4>
         <ol className="text-sm text-yellow-800 space-y-1">
-          <li>1️⃣ Testerlar email'larini kiriting (har birini yangi qatorga)</li>
-          <li>2️⃣ "Testerlarni Qo'shish" bosing</li>
-          <li>3️⃣ Release notes yozing</li>
-          <li>4️⃣ "Release Yaratish" bosing</li>
-          <li>5️⃣ Test linkni testerlar bilan bo'lishing!</li>
+          <li>1. {t('addTestersLabel')}</li>
+          <li>2. {t('addTestersBtn')}</li>
+          <li>3. {t('testReleaseDesc')}</li>
+          <li>4. {t('createReleaseBtn')}</li>
+          <li>5. {t('getLinkBtn')}</li>
         </ol>
       </div>
     </div>

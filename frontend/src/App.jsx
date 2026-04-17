@@ -7,8 +7,10 @@ import Dashboard from './pages/Dashboard';
 import ServiceAccountSetup from './pages/ServiceAccountSetup';
 import AppManagement from './pages/AppManagement';
 import Testing from './pages/Testing';
+import QuickStart from './pages/QuickStart';
 import AdminPanel from './pages/AdminPanel';
 import SupportWidget from './components/SupportWidget';
+import ExitIntentPopup from './components/ExitIntentPopup';
 import { authAPI } from './utils/api';
 
 function App() {
@@ -48,7 +50,7 @@ function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
       </div>
     );
   }
@@ -59,6 +61,7 @@ function App() {
         <Route path="/login" element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to={isAdmin ? "/admin" : "/dashboard"} />} />
         <Route path="/register" element={!isAuthenticated ? <Register onRegister={() => handleLogin(false)} /> : <Navigate to="/dashboard" />} />
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+        <Route path="/quick-start" element={<QuickStart isAuthenticated={isAuthenticated} />} />
         <Route path="/setup" element={isAuthenticated ? <ServiceAccountSetup /> : <Navigate to="/login" />} />
         <Route path="/apps/:serviceAccountId" element={isAuthenticated ? <AppManagement /> : <Navigate to="/login" />} />
         <Route path="/testing/:serviceAccountId" element={isAuthenticated ? <Testing /> : <Navigate to="/login" />} />
@@ -66,6 +69,7 @@ function App() {
         <Route path="/" element={isAuthenticated ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} /> : <Home />} />
       </Routes>
       {isAuthenticated && <SupportWidget />}
+      <ExitIntentPopup />
     </Router>
   );
 }

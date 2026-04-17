@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Globe, Check, Edit2, X, Loader } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -21,6 +22,7 @@ const LANGUAGES = [
 ];
 
 export default function TranslationManager({ translations, onUpdate, onClose }) {
+  const { t } = useTranslation();
   const [editingLang, setEditingLang] = useState(null);
   const [editedData, setEditedData] = useState({});
   const [filter, setFilter] = useState('');
@@ -52,11 +54,11 @@ export default function TranslationManager({ translations, onUpdate, onClose }) 
         <div className="flex justify-between items-center p-4 sm:p-6 border-b">
           <div>
             <h2 className="text-lg sm:text-2xl font-bold flex items-center gap-2">
-              <Globe className="w-6 h-6 text-primary-600" />
-              Tarjimalarni Boshqarish
+              <Globe className="w-6 h-6 text-black" />
+              {t('translations')}
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              {Object.keys(translations || {}).length} ta til tarjimasi
+              {Object.keys(translations || {}).length} {t('translations')}
             </p>
           </div>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -68,10 +70,10 @@ export default function TranslationManager({ translations, onUpdate, onClose }) 
         <div className="p-4 sm:p-6 border-b">
           <input
             type="text"
-            placeholder="Tilni qidirish..."
+            placeholder={t('translations') + '...'}
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
           />
         </div>
 
@@ -89,7 +91,7 @@ export default function TranslationManager({ translations, onUpdate, onClose }) 
                     translation
                       ? 'border-green-300 bg-green-50'
                       : 'border-gray-200 bg-white'
-                  } ${isEditing ? 'ring-2 ring-primary-500' : ''}`}
+                  } ${isEditing ? 'ring-2 ring-black' : ''}`}
                 >
                   {/* Language Header */}
                   <div className="flex justify-between items-start mb-3">
@@ -131,15 +133,15 @@ export default function TranslationManager({ translations, onUpdate, onClose }) 
                       <div className="flex gap-2 pt-2">
                         <button
                           onClick={() => handleSave(lang.code)}
-                          className="flex-1 bg-green-600 text-white text-xs py-1.5 rounded hover:bg-green-700"
+                          className="flex-1 bg-black text-white text-xs py-1.5 rounded hover:bg-neutral-800"
                         >
-                          Saqlash
+                          {t('saveBtn')}
                         </button>
                         <button
                           onClick={handleCancel}
                           className="flex-1 bg-gray-200 text-gray-700 text-xs py-1.5 rounded hover:bg-gray-300"
                         >
-                          Bekor
+                          {t('cancelBtn')}
                         </button>
                       </div>
                     </div>
@@ -155,20 +157,20 @@ export default function TranslationManager({ translations, onUpdate, onClose }) 
                       </div>
                       <button
                         onClick={() => handleEdit(lang.code)}
-                        className="w-full bg-primary-600 text-white text-xs py-1.5 rounded hover:bg-primary-700 flex items-center justify-center gap-1"
+                        className="w-full bg-black text-white text-xs py-1.5 rounded hover:bg-neutral-800 flex items-center justify-center gap-1"
                       >
                         <Edit2 className="w-3 h-3" />
-                        Tahrirlash
+                        {t('editBtn')}
                       </button>
                     </div>
                   ) : (
                     <div className="text-center py-4">
-                      <p className="text-xs text-gray-400 mb-2">Tarjima yo'q</p>
+                      <p className="text-xs text-gray-400 mb-2">{t('noTranslationYet')}</p>
                       <button
                         onClick={() => handleEdit(lang.code)}
-                        className="text-xs text-primary-600 hover:text-primary-700 font-medium"
+                        className="text-xs text-black hover:text-black font-medium"
                       >
-                        + Qo'shish
+                        + {t('addBtn')}
                       </button>
                     </div>
                   )}
@@ -181,13 +183,13 @@ export default function TranslationManager({ translations, onUpdate, onClose }) 
         {/* Footer */}
         <div className="p-4 sm:p-6 border-t bg-gray-50 flex justify-between items-center">
           <div className="text-sm text-gray-600">
-            ✅ {Object.keys(translations || {}).length} / {LANGUAGES.length} til to'ldirilgan
+             {Object.keys(translations || {}).length} / {LANGUAGES.length} {t('langFilled')}
           </div>
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium"
+            className="px-6 py-2 bg-black text-white rounded-lg hover:bg-neutral-800 font-medium"
           >
-            Tayyor
+            {t('readyBtn')}
           </button>
         </div>
       </div>

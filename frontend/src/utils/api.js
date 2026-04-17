@@ -131,6 +131,7 @@ export const testingAPI = {
 
 export const aiAPI = {
   analyze: (data) => api.post('/api/ai/analyze', data),
+  quickGenerate: (data) => api.post('/api/ai/quick-generate', data),
 };
 
 export const deployAPI = {
@@ -152,6 +153,11 @@ export const supportAPI = {
   createTicket: (data) => api.post('/api/support/tickets', data),
   addMessage: (ticketId, message) => api.post(`/api/support/tickets/${ticketId}/messages`, { message }),
   updateStatus: (ticketId, status) => api.put(`/api/support/tickets/${ticketId}/status`, { status }),
+};
+
+export const feedbackAPI = {
+  submit: (data) => api.post('/api/feedback', data),
+  submitAnonymous: (data) => api.post('/api/feedback/anonymous', data),
 };
 
 export default api;

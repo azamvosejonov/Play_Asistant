@@ -9,6 +9,7 @@ import PhonePreview from '../components/PhonePreview';
 import TranslationManager from '../components/TranslationManager';
 import ConfirmDialog from '../components/ConfirmDialog';
 import AABUploader from '../components/AABUploader';
+import FeedbackWidget from '../components/FeedbackWidget';
 
 export default function AppManagement() {
   const { t } = useTranslation();
@@ -42,6 +43,8 @@ export default function AppManagement() {
   });
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [savedGraphics, setSavedGraphics] = useState([]);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackTrigger, setFeedbackTrigger] = useState('general');
   
   // AI states
   const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
@@ -157,6 +160,10 @@ export default function AppManagement() {
       if (res.data.results?.steps?.length > 0) {
         setUploadSuccess(t('completed'));
         setTimeout(() => setUploadSuccess(''), 5000);
+        localStorage.setItem('has_deployed', 'true');
+        // Deploy muvaffaqiyatidan keyin NPS so'rash
+        setFeedbackTrigger('deploy_success');
+        setTimeout(() => setShowFeedback(true), 2000);
       }
     } catch (err) {
       setSubmitErrors([err.response?.data?.detail || err.message]);
@@ -180,8 +187,8 @@ export default function AppManagement() {
           
           const sourceMsg = {
             'google_play': `🌐 Google Play (${language})`,
-            'draft': `📝 Draft (${language})`,
-            'listing': `✅ Saqlangan (${language})`
+            'draft': ` Draft (${language})`,
+            'listing': ` Saqlangan (${language})`
           };
           if (sourceMsg[response.data.source]) {
             setUploadSuccess(sourceMsg[response.data.source]);
@@ -247,10 +254,10 @@ export default function AppManagement() {
           })
         }));
       }
-      setUploadSuccess('🗑️ Rasm o\'chirildi!');
+      setUploadSuccess(t('deleted'));
       setTimeout(() => setUploadSuccess(''), 2000);
     } catch (err) {
-      alert('Rasm o\'chirishda xatolik: ' + (err.response?.data?.detail || err.message));
+      alert(t('error') + ': ' + (err.response?.data?.detail || err.message));
     }
   };
 
@@ -282,14 +289,14 @@ export default function AppManagement() {
       
       let message = '';
       if (response.data.added.length > 0) {
-        message += `✅ ${response.data.added.length} ta ilova muvaffaqiyatli qo'shildi!\n\n`;
-        message += `Qo'shilgan ilovalar:\n${response.data.added.join('\n')}`;
+        message += ` ${response.data.added.length} ${t('addedApps')}\n\n`;
+        message += `${t('addedAppsList')}:\n${response.data.added.join('\n')}`;
       }
       
       if (response.data.failed.length > 0) {
         if (message) message += '\n\n';
-        message += `❌ ${response.data.failed.length} ta ilovaga kirish yo'q:\n${response.data.failed.join('\n')}\n\n`;
-        message += `Service Account ruxsatlarini tekshiring!`;
+        message += `${response.data.failed.length} ${t('failedApps')}:\n${response.data.failed.join('\n')}\n\n`;
+        message += t('checkPermissions');
       }
       
       if (message) {
@@ -303,7 +310,7 @@ export default function AppManagement() {
       }
     } catch (error) {
       const errorMsg = error.response?.data?.detail || error.message;
-      alert('❌ Xatolik: ' + errorMsg + '\n\nService Account JSON fayli to\'g\'ri yuklanganini va Play Console\'da ruxsatlar berilganini tekshiring.');
+      alert(t('error') + ': ' + errorMsg + '\n\n' + t('checkPermissions'));
     } finally {
       setAdding(false);
     }
@@ -311,7 +318,7 @@ export default function AppManagement() {
 
   const handleTranslate = async () => {
     if (!title || !shortDesc || !fullDesc) {
-      alert('Barcha maydonlarni to\'ldiring');
+      alert(t('setupFillAll'));
       return;
     }
 
@@ -333,7 +340,7 @@ export default function AppManagement() {
 
   const handleUpdateListing = () => {
     if (!selectedApp || !title || !shortDesc || !fullDesc) {
-      alert('Barcha maydonlarni to\'ldiring!');
+      alert(t('setupFillAll'));
       return;
     }
     setShowConfirmDialog(true);
@@ -371,11 +378,11 @@ export default function AppManagement() {
       }
 
       const r = response.data?.results;
-      let msg = '✅ Play Market\'ga yuborildi!';
+      let msg = ' Play Market\'ga yuborildi!';
       if (r) {
         const parts = [];
-        if (r.listing_updated) parts.push('Listing ✓');
-        if (r.graphics_uploaded > 0) parts.push(`${r.graphics_uploaded} ta rasm ✓`);
+        if (r.listing_updated) parts.push('Listing ');
+        if (r.graphics_uploaded > 0) parts.push(`${r.graphics_uploaded} ta rasm `);
         if (r.graphics_failed > 0) parts.push(`${r.graphics_failed} ta rasm ✗`);
         if (r.language_used) parts.push(`Til: ${r.language_used}`);
         if (parts.length) msg += '\n' + parts.join(' | ');
@@ -421,13 +428,13 @@ export default function AppManagement() {
 
     try {
       const response = await graphicAPI.upload(formData);
-      const msg = response.data?.message || `${graphicType} yuklandi!`;
-      setUploadSuccess(response.data?.uploaded_to_play ? `✅ ${msg}` : `📁 ${msg}`);
+      const msg = response.data?.message || `${graphicType} ${t('uploadSuccess')}`;
+      setUploadSuccess(response.data?.uploaded_to_play ? ` ${msg}` : ` ${msg}`);
       setTimeout(() => setUploadSuccess(''), 3000);
       // Grafiklarni qayta yuklash
       fetchGraphics(selectedApp.id);
     } catch (error) {
-      alert(error.response?.data?.detail || 'Rasm yuklashda xatolik yuz berdi');
+      alert(error.response?.data?.detail || t('errorOccurred'));
     }
   };
 
@@ -443,20 +450,20 @@ export default function AppManagement() {
         full_description: fullDesc
       }, serviceAccountId);
       
-      setUploadSuccess('💾 Draft sifatida saqlandi!');
+      setUploadSuccess(t('saved'));
       setTimeout(() => setUploadSuccess(''), 3000);
     } catch (error) {
-      alert('Xatolik: ' + (error.response?.data?.detail || error.message));
+      alert(t('error') + ': ' + (error.response?.data?.detail || error.message));
     }
   };
 
   const handleSaveTemplate = async () => {
     if (!title || !shortDesc || !fullDesc) {
-      alert('Barcha maydonlarni to\'ldiring');
+      alert(t('setupFillAll'));
       return;
     }
 
-    const templateName = prompt('Shablon nomini kiriting:');
+    const templateName = prompt(t('template') + ':');
     if (!templateName) return;
 
     try {
@@ -466,16 +473,16 @@ export default function AppManagement() {
         short_description: shortDesc,
         full_description: fullDesc
       });
-      alert('Shablon saqlandi!');
+      alert(t('saved'));
     } catch (error) {
-      alert('Xatolik yuz berdi');
+      alert(t('errorOccurred'));
     }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
       </div>
     );
   }
@@ -553,9 +560,9 @@ export default function AppManagement() {
                           setFullDesc(listingRes.data.full_description || '');
                           
                           const sourceMsg = {
-                            'google_play': '🌐 Google Play\'dan yuklandi',
-                            'draft': '📝 Draft yuklandi',
-                            'listing': '✅ Saqlangan ma\'lumot yuklandi'
+                            'google_play': t('uploadSuccess'),
+                            'draft': t('saved'),
+                            'listing': t('saved')
                           };
                           if (sourceMsg[listingRes.data.source]) {
                             setUploadSuccess(sourceMsg[listingRes.data.source]);
@@ -584,7 +591,7 @@ export default function AppManagement() {
                       }}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedApp?.id === app.id
-                          ? 'border-primary-500 bg-primary-50'
+                          ? 'border-black bg-gray-900 text-white'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -612,7 +619,7 @@ export default function AppManagement() {
               </div>
             ) : loadingData ? (
               <div className="card text-center py-16">
-                <RefreshCw className="w-8 h-8 text-primary-500 animate-spin mx-auto mb-3" />
+                <RefreshCw className="w-8 h-8 text-black animate-spin mx-auto mb-3" />
                 <p className="text-gray-500">{t('dataLoading')}</p>
               </div>
             ) : (
@@ -639,15 +646,15 @@ export default function AppManagement() {
                         alert(err.response?.data?.detail || t('deleteError'));
                       }
                     }}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition"
-                    title="Ilovani o'chirish"
+                    className="text-black hover:text-black hover:bg-red-50 p-2 rounded-lg transition"
+                    title={t('deleteAppTitle')}
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
 
                 {uploadSuccess && (
-                  <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                  <div className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg text-sm">
                     {uploadSuccess}
                   </div>
                 )}
@@ -657,21 +664,21 @@ export default function AppManagement() {
                   packageName={selectedApp.package_name}
                   serviceAccountId={serviceAccountId}
                   onUploadSuccess={(result) => {
-                    setUploadSuccess(`✅ AAB yuklandi: ${result.version_name} (${result.file_size_mb} MB)`);
+                    setUploadSuccess(`${t('uploadSuccess')}: ${result.version_name} (${result.file_size_mb} MB)`);
                     setTimeout(() => setUploadSuccess(''), 5000);
                   }}
                 />
 
                 {/* AI Loading Banner */}
                 {aiLoading && (
-                  <div className="card bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200">
+                  <div className="card bg-white border-black">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
                         <Loader2 className="w-5 h-5 text-white animate-spin" />
                       </div>
                       <div>
-                        <p className="font-semibold text-purple-800">{t('aiAnalyzing')}</p>
-                        <p className="text-sm text-purple-600">{t('aiAnalyzingDesc')}</p>
+                        <p className="font-semibold text-black">{t('aiAnalyzing')}</p>
+                        <p className="text-sm text-black">{t('aiAnalyzingDesc')}</p>
                       </div>
                     </div>
                   </div>
@@ -682,7 +689,7 @@ export default function AppManagement() {
                   <div className="space-y-3">
                     {/* Maslahatlar */}
                     {aiAdvice.length > 0 && (
-                      <div className="card bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200">
+                      <div className="card bg-white border-amber-200">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <Sparkles className="w-5 h-5 text-amber-600" />
@@ -703,14 +710,14 @@ export default function AppManagement() {
                           ))}
                         </ul>
                         {aiAutoApplied && (
-                          <p className="text-xs text-green-600 mt-3 font-medium">✅ {t('aiAutoApplied')}</p>
+                          <p className="text-xs text-black mt-3 font-medium"> {t('aiAutoApplied')}</p>
                         )}
                       </div>
                     )}
                     
                     {/* Qolgan Tasklar */}
                     {aiTasks.length > 0 && (
-                      <div className="card bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
+                      <div className="card bg-white border-blue-200">
                         <div className="flex items-center gap-2 mb-3">
                           <AlertTriangle className="w-5 h-5 text-blue-600" />
                           <span className="font-semibold text-black">{t('remainingTasks')}</span>
@@ -736,7 +743,7 @@ export default function AppManagement() {
                       <button
                         onClick={() => aiAnalyze()}
                         disabled={!selectedApp || aiLoading}
-                        className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold text-sm hover:from-purple-600 hover:to-indigo-700 transition-all shadow-lg shadow-purple-200 disabled:opacity-50"
+                        className="flex items-center gap-2 px-3 py-2 bg-black text-white rounded-lg font-medium text-sm hover:bg-neutral-800 transition-all disabled:opacity-50"
                       >
                         {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                         {t('aiRewrite')}
@@ -744,7 +751,7 @@ export default function AppManagement() {
                       <button
                         onClick={() => setShowAiModal(true)}
                         disabled={!selectedApp}
-                        className="flex items-center gap-2 px-3 py-2 border border-purple-300 text-purple-600 rounded-xl font-semibold text-sm hover:bg-purple-50 transition-all disabled:opacity-50"
+                        className="flex items-center gap-2 px-3 py-2 border border-gray-200 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-50 transition-all disabled:opacity-50"
                       >
                         <Zap className="w-4 h-4" />
                         {t('settings')}
@@ -756,14 +763,14 @@ export default function AppManagement() {
                   {submitErrors.length > 0 && (
                     <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl">
                       <div className="flex items-center gap-2 mb-2">
-                        <AlertTriangle className="w-5 h-5 text-red-500" />
-                        <span className="font-semibold text-red-700">{t('errors')}</span>
-                        <button onClick={() => setSubmitErrors([])} className="ml-auto text-red-400 hover:text-red-600">
+                        <AlertTriangle className="w-5 h-5 text-black" />
+                        <span className="font-semibold text-black">{t('errors')}</span>
+                        <button onClick={() => setSubmitErrors([])} className="ml-auto text-black hover:text-black">
                           <X className="w-4 h-4" />
                         </button>
                       </div>
                       {submitErrors.map((err, i) => (
-                        <p key={i} className="text-sm text-red-600 ml-7">{err}</p>
+                        <p key={i} className="text-sm text-black ml-7">{err}</p>
                       ))}
                     </div>
                   )}
@@ -798,7 +805,7 @@ export default function AppManagement() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value.slice(0, 30))}
                         className="input"
-                        placeholder="Ilova nomini kiriting"
+                        placeholder={t('appTitle')}
                         maxLength={30}
                       />
                       <p className="text-xs text-gray-500 mt-1">{title.length}/30</p>
@@ -813,7 +820,7 @@ export default function AppManagement() {
                         onChange={(e) => setShortDesc(e.target.value.slice(0, 80))}
                         className="input"
                         rows={2}
-                        placeholder="Qisqa ta'rifni kiriting"
+                        placeholder={t('shortDescription')}
                         maxLength={80}
                       />
                       <p className="text-xs text-gray-500 mt-1">{shortDesc.length}/80</p>
@@ -828,7 +835,7 @@ export default function AppManagement() {
                         onChange={(e) => setFullDesc(e.target.value.slice(0, 4000))}
                         className="input"
                         rows={8}
-                        placeholder="To'liq ta'rifni kiriting"
+                        placeholder={t('fullDescription')}
                         maxLength={4000}
                       />
                       <p className="text-xs text-gray-500 mt-1">{fullDesc.length}/4000</p>
@@ -846,7 +853,7 @@ export default function AppManagement() {
                       {translations && Object.keys(translations).length > 0 && (
                         <button
                           onClick={() => setShowTranslationManager(true)}
-                          className="btn bg-purple-600 text-white hover:bg-purple-700 flex items-center gap-2"
+                          className="btn bg-black text-white hover:bg-neutral-800 flex items-center gap-2"
                         >
                           <Eye className="w-5 h-5" />
                           {Object.keys(translations).length} {t('langCount')}
@@ -869,9 +876,9 @@ export default function AppManagement() {
                     </div>
 
                     {translations && (
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p className="text-green-800 font-medium">
-                          ✓ {Object.keys(translations).length} {t('translatedTo')}
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <p className="text-gray-900 font-medium">
+                           {Object.keys(translations).length} {t('translatedTo')}
                         </p>
                       </div>
                     )}
@@ -1019,7 +1026,7 @@ export default function AppManagement() {
                 <button
                   onClick={fullDeploy}
                   disabled={deploying || uploading || !title.trim()}
-                  className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl font-bold text-base sm:text-lg shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all mb-2"
+                  className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 bg-black text-white rounded-lg font-medium text-base sm:text-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all mb-2"
                 >
                   {deploying ? (
                     <>
@@ -1059,14 +1066,14 @@ export default function AppManagement() {
                   <div className="mt-4 space-y-3">
                     {/* Bajarilgan ishlar */}
                     {deployResult.steps?.length > 0 && (
-                      <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+                      <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl">
                         <div className="flex items-center gap-2 mb-2">
                           <CheckCircle className="w-5 h-5 text-green-600" />
-                          <span className="font-semibold text-green-800">{t('completed')}</span>
+                          <span className="font-semibold text-gray-900">{t('completed')}</span>
                         </div>
                         <ul className="space-y-1">
                           {deployResult.steps.map((step, i) => (
-                            <li key={i} className="text-sm text-green-700">{step}</li>
+                            <li key={i} className="text-sm text-gray-700">{step}</li>
                           ))}
                         </ul>
                       </div>
@@ -1144,25 +1151,21 @@ export default function AppManagement() {
               
               let message = '';
               if (response.data.added && response.data.added.length > 0) {
-                message += `✅ ${response.data.added.length} ta ilova muvaffaqiyatli qo'shildi!\n\n`;
-                message += `Qo'shilgan ilovalar:\n${response.data.added.join('\n')}`;
+                message += ` ${response.data.added.length} ${t('addedApps')}\n\n`;
+                message += `${t('addedAppsList')}:\n${response.data.added.join('\n')}`;
               }
               
               if (response.data.failed && response.data.failed.length > 0) {
                 if (message) message += '\n\n';
-                message += `❌ ${response.data.failed.length} ta ilovaga kirish yo'q:\n${response.data.failed.join('\n')}\n\n`;
-                message += `💡 Sabab: Service Account Play Console'da ruxsat olmagan!\n\n`;
-                message += `Hal qilish:\n`;
-                message += `1. Play Console → Users and permissions\n`;
-                message += `2. Service Account email'ni qo'shing\n`;
-                message += `3. Admin ruxsat bering`;
+                message += `${response.data.failed.length} ${t('failedApps')}:\n${response.data.failed.join('\n')}\n\n`;
+                message += `${t('failedReason')}`;
               }
               
               if (!message) {
-                message = '⚠️ Ilova qo\'shilmadi!\n\nMumkin sabablar:\n';
-                message += '• Bu ilova allaqachon qo\'shilgan\n';
-                message += '• Service Account\'da ruxsat yo\'q\n';
-                message += '• Package name noto\'g\'ri';
+                message = `${t('appNotAdded')}\n\n${t('possibleReasons')}:\n`;
+                message += `• ${t('alreadyAdded')}\n`;
+                message += `• ${t('noSaPermission')}\n`;
+                message += `• ${t('wrongPackageName')}`;
               }
               
               alert(message);
@@ -1171,7 +1174,7 @@ export default function AppManagement() {
               fetchApps();
             } catch (error) {
               console.error('Error:', error);
-              alert('❌ Xatolik!\n\n' + (error.response?.data?.detail || error.message));
+              alert(t('error') + ':\n\n' + (error.response?.data?.detail || error.message));
             } finally {
               setAdding(false);
             }
@@ -1218,7 +1221,7 @@ export default function AppManagement() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="p-4 sm:p-6 border-b bg-gradient-to-r from-purple-500 to-indigo-600 rounded-t-2xl">
+            <div className="p-4 sm:p-6 border-b bg-white rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -1237,10 +1240,10 @@ export default function AppManagement() {
             
             <div className="p-4 sm:p-6 space-y-4">
               {/* API key connected indicator */}
-              <div className="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-sm text-green-700 font-medium">{t('aiConnected')}</span>
-                <span className="text-xs text-green-500 ml-auto">llama-3.1-8b</span>
+                <span className="text-sm text-gray-900 font-medium">{t('aiConnected')}</span>
+                <span className="text-xs text-gray-500 ml-auto">llama-3.1-8b</span>
               </div>
 
               {/* Prompt */}
@@ -1262,7 +1265,7 @@ export default function AppManagement() {
               <button
                 onClick={() => aiAnalyze()}
                 disabled={aiLoading}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-indigo-700 transition-all disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 transition-all disabled:opacity-50"
               >
                 {aiLoading ? (
                   <>
@@ -1280,7 +1283,7 @@ export default function AppManagement() {
               {/* AI Result */}
               {aiResult && (
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-2 text-green-600">
+                  <div className="flex items-center gap-2 text-black">
                     <Sparkles className="w-4 h-4" />
                     <span className="font-semibold text-sm">{t('aiResult')}</span>
                   </div>
@@ -1304,7 +1307,7 @@ export default function AppManagement() {
                         <span className="text-xs font-medium text-gray-500">Tags</span>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {aiResult.tags.map((tag, i) => (
-                            <span key={i} className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs">{tag}</span>
+                            <span key={i} className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">{tag}</span>
                           ))}
                         </div>
                       </div>
@@ -1336,7 +1339,7 @@ export default function AppManagement() {
                   <div className="flex gap-2">
                     <button
                       onClick={applyAiResult}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-xl font-semibold text-sm hover:bg-green-700 transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg font-medium text-sm hover:bg-neutral-800 transition-all"
                     >
                       {t('apply')}
                     </button>
@@ -1356,7 +1359,7 @@ export default function AppManagement() {
               {submitErrors.length > 0 && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
                   {submitErrors.map((err, i) => (
-                    <p key={i} className="text-sm text-red-600">{err}</p>
+                    <p key={i} className="text-sm text-black">{err}</p>
                   ))}
                 </div>
               )}
@@ -1364,6 +1367,12 @@ export default function AppManagement() {
           </div>
         </div>
       )}
+      <FeedbackWidget
+        show={showFeedback}
+        onClose={() => setShowFeedback(false)}
+        trigger={feedbackTrigger}
+        mode="nps"
+      />
     </div>
   );
 }

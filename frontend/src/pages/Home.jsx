@@ -1,95 +1,128 @@
 import { Link } from 'react-router-dom';
-import { Rocket, Shield, Zap, ArrowRight } from 'lucide-react';
-import logo from '../assets/logo.png';
+import { ArrowRight, Zap, Shield, Lock, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import BetaBadge from '../components/BetaBadge';
 
 export default function Home() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <img src={logo} alt="NexusDeploy" className="w-10 h-10 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl" />
-              <span className="text-base sm:text-xl font-bold">{t('appName')}</span>
-              <BetaBadge />
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="hidden sm:block">
-                <LanguageSwitcher />
-              </div>
-              <Link to="/login" className="btn btn-secondary text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2">
-                {t('login')}
-              </Link>
-              <Link to="/register" className="btn btn-primary text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2">
-                {t('register')}
+    <div className="min-h-screen bg-white">
+      {/* Minimal nav — language icon + Get Started */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          <div className="flex justify-between items-center h-14">
+            <span className="text-sm font-semibold tracking-tight text-gray-900">{t('appName')}</span>
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher />
+              <Link to="/register" className="btn btn-primary text-sm px-5 py-2">
+                {t('homeGetStarted')}
               </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20">
-        <div className="text-center mb-10 sm:mb-16">
-          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
+      {/* Hero — big, spacious, confident */}
+      <section className="pt-32 sm:pt-44 pb-20 sm:pb-32 px-5 sm:px-8">
+        <div className="max-w-3xl mx-auto animate-fade-in-up">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight leading-[1.08] text-balance">
             {t('homeTitle')}
           </h1>
-          <p className="text-base sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto">
+          <p className="mt-6 sm:mt-8 text-lg sm:text-xl text-gray-500 max-w-2xl leading-relaxed">
             {t('homeSubtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <Link to="/register" className="btn btn-primary flex items-center gap-2 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto justify-center">
-              {t('register')}
-              <ArrowRight className="w-5 h-5" />
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-start gap-3">
+            <Link
+              to="/quick-start"
+              className="inline-flex items-center gap-2 text-base px-7 py-3.5 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 active:scale-[0.98] transition-all"
+            >
+              {t('homeTestDrive')}
+              <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link to="/login" className="btn btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto text-center">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 text-base px-7 py-3.5 text-gray-600 hover:text-gray-900 rounded-lg font-medium hover:bg-gray-50 transition-all"
+            >
               {t('login')}
+              <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
+          <p className="mt-4 text-sm text-gray-400">{t('homeTestDriveHint')}</p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 mb-10 sm:mb-16">
-          <div className="card text-center p-5 sm:p-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-4">
-              <Rocket className="w-8 h-8 text-primary-600" />
-            </div>
-            <h3 className="text-xl font-bold mb-3">{t('homeFeature1Title')}</h3>
-            <p className="text-gray-600">
-              {t('homeFeature1Desc')}
-            </p>
-          </div>
-
-          <div className="card text-center p-5 sm:p-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-2xl mb-4">
-              <Zap className="w-8 h-8 text-purple-600" />
-            </div>
-            <h3 className="text-xl font-bold mb-3">{t('homeFeature2Title')}</h3>
-            <p className="text-gray-600">
-              {t('homeFeature2Desc')}
-            </p>
-          </div>
-
-          <div className="card text-center p-5 sm:p-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
-              <Shield className="w-8 h-8 text-green-600" />
-            </div>
-            <h3 className="text-xl font-bold mb-3">{t('homeFeature3Title')}</h3>
-            <p className="text-gray-600">
-              {t('homeFeature3Desc')}
-            </p>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <p className="text-gray-500 text-sm">
-            {t('homePowered')}
-          </p>
-        </div>
+      {/* Thin divider */}
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="h-px bg-gray-100"></div>
       </div>
+
+      {/* Features — no boxes, just clean typography */}
+      <section className="py-20 sm:py-28 px-5 sm:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+            <div className="animate-fade-in-delay-1">
+              <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-50 mb-4">
+                <Zap className="w-5 h-5 text-gray-900" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('homeFeature1Title')}</h3>
+              <p className="text-gray-500 leading-relaxed text-[15px]">
+                {t('homeFeature1Desc')}
+              </p>
+            </div>
+
+            <div className="animate-fade-in-delay-2">
+              <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-50 mb-4">
+                <Shield className="w-5 h-5 text-gray-900" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('homeFeature2Title')}</h3>
+              <p className="text-gray-500 leading-relaxed text-[15px]">
+                {t('homeFeature2Desc')}
+              </p>
+            </div>
+
+            <div className="animate-fade-in-delay-3">
+              <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-50 mb-4">
+                <Lock className="w-5 h-5 text-gray-900" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('homeFeature3Title')}</h3>
+              <p className="text-gray-500 leading-relaxed text-[15px]">
+                {t('homeFeature3Desc')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Thin divider */}
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="h-px bg-gray-100"></div>
+      </div>
+
+      {/* Bottom CTA */}
+      <section className="py-20 sm:py-28 px-5 sm:px-8">
+        <div className="max-w-2xl mx-auto text-center animate-fade-in-delay-4">
+          <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 tracking-tight text-balance">
+            {t('homeCTA')}
+          </h2>
+          <p className="mt-4 text-gray-500 text-lg">{t('homeFreeDesc')}</p>
+          <Link
+            to="/register"
+            className="mt-8 inline-flex items-center gap-2 text-base px-7 py-3.5 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 active:scale-[0.98] transition-all"
+          >
+            {t('homeGetStarted')}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-100 py-8 px-5 sm:px-8">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <span className="text-xs text-gray-400">{t('homePowered')}</span>
+          <span className="text-xs text-gray-400">{t('homeFree')}</span>
+        </div>
+      </footer>
     </div>
   );
 }

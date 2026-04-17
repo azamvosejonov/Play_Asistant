@@ -125,7 +125,7 @@ export default function AdminPanel() {
   const priorityColors = {
     low: 'bg-gray-100 text-gray-600',
     medium: 'bg-blue-100 text-blue-700',
-    high: 'bg-red-100 text-red-700',
+    high: 'bg-red-100 text-black',
   };
 
   return (
@@ -138,8 +138,8 @@ export default function AdminPanel() {
               <button onClick={() => navigate('/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg">
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
-              <span className="text-base sm:text-xl font-bold text-purple-900">{t('adminPanel')}</span>
+              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+              <span className="text-base sm:text-xl font-bold text-black">{t('adminPanel')}</span>
             </div>
             <div className="hidden sm:block">
               <LanguageSwitcher />
@@ -158,7 +158,7 @@ export default function AdminPanel() {
                 onClick={() => { setActiveTab(tab.id); setSelectedTicket(null); }}
                 className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
                   activeTab === tab.id 
-                    ? 'bg-purple-600 text-white' 
+                    ? 'bg-black text-white' 
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -182,7 +182,7 @@ export default function AdminPanel() {
                   onClick={() => { setActiveTab(tab.id); setSelectedTicket(null); }}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all ${
                     activeTab === tab.id 
-                      ? 'bg-purple-50 text-purple-700 border-l-4 border-purple-600' 
+                      ? 'bg-gray-900 text-white border-l-4 border-black' 
                       : 'text-gray-600 hover:bg-gray-50 border-l-4 border-transparent'
                   }`}
                 >
@@ -200,7 +200,7 @@ export default function AdminPanel() {
           <div className="flex-1 min-w-0">
             {loading ? (
               <div className="flex items-center justify-center py-20">
-                <RefreshCw className="w-8 h-8 animate-spin text-purple-600" />
+                <RefreshCw className="w-8 h-8 animate-spin text-black" />
               </div>
             ) : (
               <>
@@ -266,7 +266,7 @@ export default function AdminPanel() {
                               <td className="px-4 py-3 text-sm font-medium">{u.email}</td>
                               <td className="px-4 py-3">
                                 {u.is_admin ? (
-                                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full font-semibold">Admin</span>
+                                  <span className="px-2 py-1 bg-gray-900 text-white text-xs rounded-full font-semibold">Admin</span>
                                 ) : (
                                   <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">User</span>
                                 )}
@@ -278,13 +278,13 @@ export default function AdminPanel() {
                                 <div className="flex gap-1">
                                   <button
                                     onClick={() => toggleUserActive(u.id, u.is_active)}
-                                    className={`p-1.5 rounded-lg ${u.is_active ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}
-                                    title={u.is_active ? 'Bloklash' : 'Faollashtirish'}
+                                    className={`p-1.5 rounded-lg ${u.is_active ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-red-50 text-red-700 hover:bg-red-100'}`}
+                                    title={u.is_active ? t('adminAction') : t('adminAction')}
                                   >
                                     {u.is_active ? <Check className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
                                   </button>
                                   {!u.is_admin && (
-                                    <button onClick={() => deleteUser(u.id)} className="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100" title="O'chirish">
+                                    <button onClick={() => deleteUser(u.id)} className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100" title={t('delete')}>
                                       <Trash2 className="w-4 h-4" />
                                     </button>
                                   )}
@@ -326,7 +326,7 @@ export default function AdminPanel() {
                                 }`}>{a.status}</span>
                               </td>
                               <td className="px-4 py-3">
-                                {a.has_aab ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-gray-300" />}
+                                {a.has_aab ? <CheckCircle className="w-4 h-4 text-black" /> : <XCircle className="w-4 h-4 text-gray-300" />}
                               </td>
                               <td className="px-4 py-3 text-sm">{a.graphics}</td>
                               <td className="px-4 py-3 text-xs text-gray-500">{a.owner_email}</td>
@@ -358,7 +358,7 @@ export default function AdminPanel() {
                               key={ticket.id}
                               onClick={() => openTicket(ticket.id)}
                               className={`w-full text-left px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-all ${
-                                selectedTicket?.id === ticket.id ? 'bg-purple-50 border-l-4 border-l-purple-600' : ''
+                                selectedTicket?.id === ticket.id ? 'bg-black border-l-4 border-l-purple-600' : ''
                               }`}
                             >
                               <div className="flex items-center justify-between mb-1">
@@ -418,11 +418,11 @@ export default function AdminPanel() {
                             <div key={m.id} className={`flex ${m.is_admin ? 'justify-end' : 'justify-start'}`}>
                               <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                                 m.is_admin 
-                                  ? 'bg-purple-600 text-white rounded-br-md' 
+                                  ? 'bg-black text-white rounded-br-md' 
                                   : 'bg-gray-100 text-gray-800 rounded-bl-md'
                               }`}>
                                 <p className="text-sm whitespace-pre-wrap">{m.message}</p>
-                                <p className={`text-xs mt-1 ${m.is_admin ? 'text-purple-200' : 'text-gray-400'}`}>
+                                <p className={`text-xs mt-1 ${m.is_admin ? 'text-black' : 'text-gray-400'}`}>
                                   {m.sender_name} • {new Date(m.created_at).toLocaleString('uz-UZ')}
                                 </p>
                               </div>
@@ -438,12 +438,12 @@ export default function AdminPanel() {
                               onChange={(e) => setNewReply(e.target.value)}
                               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendReply()}
                               placeholder={t('writeMessage')}
-                              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black"
                             />
                             <button
                               onClick={sendReply}
                               disabled={!newReply.trim()}
-                              className="px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50 transition-all"
+                              className="px-4 py-2.5 bg-black text-white rounded-xl hover:bg-neutral-800 disabled:opacity-50 transition-all"
                             >
                               <Send className="w-4 h-4" />
                             </button>

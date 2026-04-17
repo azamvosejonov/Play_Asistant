@@ -114,6 +114,19 @@ class SupportTicket(Base):
     user = relationship("User", back_populates="tickets", foreign_keys=[user_id])
     messages = relationship("SupportMessage", back_populates="ticket", order_by="SupportMessage.created_at")
 
+class Feedback(Base):
+    __tablename__ = "feedbacks"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    feedback_type = Column(String, nullable=False)  # emoji, nps, exit_intent
+    rating = Column(Integer, nullable=True)  # 1-3 for emoji, 0-10 for NPS
+    reason = Column(String, nullable=True)  # exit intent reason
+    comment = Column(Text, nullable=True)
+    trigger = Column(String, nullable=True)  # deploy_success, translate_success, quickstart, exit
+    page = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class SupportMessage(Base):
     __tablename__ = "support_messages"
     

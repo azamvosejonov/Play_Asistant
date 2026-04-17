@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Plus, LogOut, Settings, Shield } from 'lucide-react';
-import logo from '../assets/logo.png';
+import { Plus, LogOut, Settings, Shield, ArrowRight, ChevronRight } from 'lucide-react';
 import { serviceAccountAPI } from '../utils/api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import BetaBadge from '../components/BetaBadge';
 
 export default function Dashboard({ isAdmin }) {
   const { t } = useTranslation();
@@ -35,46 +33,43 @@ export default function Dashboard({ isAdmin }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
       </div>
     );
   }
 
   if (accounts.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <img src={logo} alt="NexusDeploy" className="w-10 h-10 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl" />
-                <span className="text-base sm:text-xl font-bold">{t('appName')}</span>
-                <BetaBadge />
+      <div className="min-h-screen bg-white">
+        <nav className="border-b border-gray-100">
+          <div className="max-w-5xl mx-auto px-5 sm:px-8">
+            <div className="flex justify-between items-center h-14">
+              <span className="text-sm font-semibold tracking-tight text-gray-900">{t('appName')}</span>
+              <div className="flex items-center gap-2">
+                <LanguageSwitcher />
+                <button onClick={handleLogout} className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">
+                  <LogOut className="w-[18px] h-[18px]" />
+                </button>
               </div>
-              <button onClick={handleLogout} className="btn btn-secondary flex items-center gap-2 text-sm sm:text-base">
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('logout')}</span>
-              </button>
             </div>
           </div>
         </nav>
 
-        <div className="max-w-2xl mx-auto px-4 py-16">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-100 rounded-full mb-6">
-              <Settings className="w-10 h-10 text-primary-600" />
-            </div>
-            <h1 className="text-3xl font-bold mb-4">{t('welcome')}!</h1>
-            <p className="text-gray-600 mb-8">
-              {t('noServiceAccounts')}
-            </p>
+        <div className="max-w-xl mx-auto px-5 py-16 sm:py-24 animate-fade-in">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">{t('welcome')}</h1>
+          <p className="text-gray-500 mt-2 text-lg">{t('qsDashboardSubtitle')}</p>
+
+          <div className="mt-10">
             <button
               onClick={() => navigate('/setup')}
-              className="btn btn-primary inline-flex items-center gap-2"
+              className="w-full flex items-center gap-4 px-5 py-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all text-left group"
             >
-              <Plus className="w-5 h-5" />
-              {t('addServiceAccount')}
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900">{t('qsDashboardSetup')}</h3>
+                <p className="text-sm text-gray-500 mt-0.5">{t('qsDashboardSetupDesc')}</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
             </button>
           </div>
         </div>
@@ -83,68 +78,51 @@ export default function Dashboard({ isAdmin }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <img src={logo} alt="NexusDeploy" className="w-10 h-10 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl" />
-              <span className="text-base sm:text-xl font-bold truncate">{t('appName')}</span>
-              <BetaBadge />
-            </div>
-            <div className="flex items-center gap-1.5 sm:gap-4">
+    <div className="min-h-screen bg-white">
+      <nav className="border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+          <div className="flex justify-between items-center h-14">
+            <span className="text-sm font-semibold tracking-tight text-gray-900">{t('appName')}</span>
+            <div className="flex items-center gap-1.5">
               {isAdmin && (
-                <button onClick={() => navigate('/admin')} className="btn flex items-center gap-1 sm:gap-2 bg-purple-600 text-white hover:bg-purple-700 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
-                  <Shield className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t('adminPanel')}</span>
+                <button onClick={() => navigate('/admin')} className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all" title={t('adminPanel')}>
+                  <Shield className="w-[18px] h-[18px]" />
                 </button>
               )}
-              <button onClick={() => navigate('/setup')} className="btn btn-primary flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
+              <LanguageSwitcher />
+              <button onClick={() => navigate('/setup')} className="btn btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 ml-1">
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">{t('newAccount')}</span>
               </button>
-              <button onClick={handleLogout} className="btn btn-secondary flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('logout')}</span>
+              <button onClick={handleLogout} className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">
+                <LogOut className="w-[18px] h-[18px]" />
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('serviceAccounts')}</h1>
-          <LanguageSwitcher />
-        </div>
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 py-8 sm:py-12">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 mb-6">{t('serviceAccounts')}</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-2">
           {accounts.map((account) => (
-            <div
+            <button
               key={account.id}
-              className="card hover:shadow-md transition-shadow cursor-pointer"
+              className="w-full flex items-center gap-4 px-5 py-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all text-left group"
               onClick={() => navigate(`/apps/${account.id}`)}
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center overflow-hidden flex-shrink-0">
-                    <img src={logo} alt="NexusDeploy" className="w-14 h-14 sm:w-20 sm:h-20" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">{account.name}</h3>
-                    <p className="text-sm text-gray-500">
-                      {new Date(account.created_at).toLocaleDateString('uz-UZ')}
-                    </p>
-                  </div>
-                </div>
+              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <Settings className="w-5 h-5 text-gray-500" />
               </div>
-              <button 
-                onClick={() => navigate(`/apps/${account.id}`)}
-                className="btn btn-primary w-full"
-              >
-                {t('manageApps')}
-              </button>
-            </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium text-gray-900 truncate">{account.name}</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {new Date(account.created_at).toLocaleDateString('uz-UZ')}
+                </p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors flex-shrink-0" />
+            </button>
           ))}
         </div>
       </div>

@@ -57,24 +57,24 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
   return (
     <div className="bg-white rounded-lg border-2 border-gray-200 p-4 sm:p-6">
       <div className="flex items-center gap-3 mb-4">
-        <Package className="w-6 h-6 text-primary-600" />
+        <Package className="w-6 h-6 text-black" />
         <h3 className="text-lg font-bold text-black">{t('aabUpload')}</h3>
       </div>
 
       {/* Upload Result */}
       {uploadResult && (
-        <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="mb-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="font-semibold text-green-800 mb-2">✅ Muvaffaqiyatli yuklandi!</p>
-              <div className="text-sm text-green-700 space-y-1">
-                <p>📦 Fayl: {uploadResult.filename}</p>
-                <p>🔢 Version Code: {uploadResult.version_code || 'N/A'} {uploadResult.auto_detected && '(avtomatik)'}</p>
-                <p>📝 Version Name: {uploadResult.version_name || 'N/A'}</p>
-                <p>💾 Hajm: {uploadResult.file_size_mb} MB</p>
+              <p className="font-semibold text-gray-900 mb-2">{t('uploadSuccess')}</p>
+              <div className="text-sm text-gray-700 space-y-1">
+                <p>{uploadResult.filename}</p>
+                <p>Version Code: {uploadResult.version_code || 'N/A'} {uploadResult.auto_detected && `(${t('autoDetected')})`}</p>
+                <p>Version Name: {uploadResult.version_name || 'N/A'}</p>
+                <p>{uploadResult.file_size_mb} MB</p>
                 {uploadResult.package_validated && (
-                  <p className="text-green-600 font-medium">✓ Package name tasdiqlandi</p>
+                  <p className="text-green-700 font-medium">{t('packageValidated')}</p>
                 )}
               </div>
             </div>
@@ -86,8 +86,8 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
       {error && (
         <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-red-800">{error}</p>
+            <AlertCircle className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
+            <p className="text-black">{error}</p>
           </div>
         </div>
       )}
@@ -96,7 +96,7 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
         {/* File Upload */}
         <div>
           <label className="block text-sm font-medium text-black mb-2">
-            {t('aabUpload')} <span className="text-red-500">*</span>
+            {t('aabUpload')} <span className="text-black">*</span>
           </label>
           <div className="relative">
             <input
@@ -108,13 +108,13 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
             />
             <label
               htmlFor="aab-upload"
-              className="flex items-center justify-center gap-3 border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition-all"
+              className="flex items-center justify-center gap-3 border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
             >
               {file ? (
                 <>
-                  <File className="w-8 h-8 text-primary-600" />
+                  <File className="w-8 h-8 text-black" />
                   <div className="text-center">
-                    <p className="font-medium text-primary-700">{file.name}</p>
+                    <p className="font-medium text-black">{file.name}</p>
                     <p className="text-xs text-gray-500 mt-1">
                       {(file.size / (1024 * 1024)).toFixed(2)} MB
                     </p>
@@ -143,7 +143,7 @@ export default function AABUploader({ packageName, serviceAccountId, onUploadSuc
         <button
           onClick={handleUpload}
           disabled={uploading || !file}
-          className="w-full bg-primary-600 text-white py-3 rounded-lg font-medium hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+          className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-neutral-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
         >
           {uploading ? (
             <>

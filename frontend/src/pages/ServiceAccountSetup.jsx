@@ -56,7 +56,7 @@ export default function ServiceAccountSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -86,7 +86,7 @@ export default function ServiceAccountSetup() {
           )}
 
           {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
+            <div className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
               <CheckCircle className="w-5 h-5" />
               {t('setupSuccess')}
             </div>
@@ -111,7 +111,7 @@ export default function ServiceAccountSetup() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('setupJsonKey')}
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center hover:border-primary-400 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center hover:border-gray-400 transition-colors">
                 <input
                   type="file"
                   onChange={handleFileChange}
@@ -122,7 +122,7 @@ export default function ServiceAccountSetup() {
                 <label htmlFor="file-upload" className="cursor-pointer">
                   {file ? (
                     <div className="flex flex-col items-center gap-2">
-                      <FileJson className="w-12 h-12 text-green-600" />
+                      <FileJson className="w-12 h-12 text-gray-900" />
                       <p className="text-sm font-medium text-gray-900">{file.name}</p>
                       <p className="text-xs text-gray-500">{t('setupChangeFile')}</p>
                     </div>
@@ -138,12 +138,12 @@ export default function ServiceAccountSetup() {
             </div>
 
             {/* Video Tutorial */}
-            <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 sm:p-6">
-              <h3 className="text-lg font-bold text-purple-900 flex items-center gap-2 mb-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
                 <PlayCircle className="w-5 h-5" />
                 {t('videoTutorial') || 'Video qo\'llanma'}
               </h3>
-              <div className="rounded-lg overflow-hidden bg-black shadow-lg">
+              <div className="rounded-lg overflow-hidden bg-black">
                 <video
                   controls
                   playsInline
@@ -155,26 +155,26 @@ export default function ServiceAccountSetup() {
                   Your browser does not support the video tag.
                 </video>
               </div>
-              <p className="text-sm text-purple-700 mt-3 text-center">
+              <p className="text-sm text-gray-500 mt-3 text-center">
                 {t('videoTutorialDesc') || 'Yuqoridagi videoda JSON kalitni qanday olish bosqichma-bosqich ko\'rsatilgan'}
               </p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4">
-              <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <Info className="w-5 h-5" />
                 {t('setupHowToGet')}
               </h3>
 
               {/* Step 1 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-blue-900">{t('guideStep1Title')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('guideStep1Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep1Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep1Desc')}</p>
                     <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-gray-900 hover:underline">
                       console.cloud.google.com <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -182,25 +182,25 @@ export default function ServiceAccountSetup() {
               </div>
 
               {/* Step 2 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-blue-900">{t('guideStep2Title')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('guideStep2Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep2Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep2Desc')}</p>
                   </div>
                 </div>
               </div>
 
               {/* Step 3 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-blue-900">{t('guideStep3Title')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('guideStep3Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep3Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep3Desc')}</p>
                     <a href="https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com" target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-gray-900 hover:underline">
                       Google Play Android Developer API <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -208,14 +208,14 @@ export default function ServiceAccountSetup() {
               </div>
 
               {/* Step 4 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-blue-900">{t('guideStep4Title')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('guideStep4Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep4Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep4Desc')}</p>
                     <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-gray-900 hover:underline">
                       IAM & Admin → Service Accounts <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -223,25 +223,25 @@ export default function ServiceAccountSetup() {
               </div>
 
               {/* Step 5 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-blue-900">{t('guideStep5Title')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('guideStep5Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep5Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep5Desc')}</p>
                   </div>
                 </div>
               </div>
 
               {/* Step 6 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">6</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">6</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-blue-900">{t('guideStep6Title')}</p>
-                    <p className="text-sm text-blue-700 mt-1">{t('guideStep6Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep6Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep6Desc')}</p>
                     <a href="https://play.google.com/console/developers" target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-blue-600 hover:text-blue-800 underline">
+                      className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-gray-900 hover:underline">
                       Play Console → API access <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -249,12 +249,12 @@ export default function ServiceAccountSetup() {
               </div>
 
               {/* Step 7 */}
-              <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start gap-3">
-                  <span className="bg-green-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">7</span>
+                  <span className="bg-black text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">7</span>
                   <div className="flex-1">
-                    <p className="font-semibold text-green-800">{t('guideStep7Title')}</p>
-                    <p className="text-sm text-green-700 mt-1">{t('guideStep7Desc')}</p>
+                    <p className="font-semibold text-gray-900">{t('guideStep7Title')}</p>
+                    <p className="text-sm text-gray-600 mt-1">{t('guideStep7Desc')}</p>
                   </div>
                 </div>
               </div>

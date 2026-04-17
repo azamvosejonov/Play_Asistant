@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
-import logo from '../assets/logo.png';
+import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { authAPI } from '../utils/api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import BetaBadge from '../components/BetaBadge';
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -34,77 +32,67 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-5">
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
-      <div className="max-w-md w-full">
-        <div className="text-center mb-6 sm:mb-8">
-          <img src={logo} alt="NexusDeploy" className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl mb-3 sm:mb-4 mx-auto" />
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('appName')}</h1>
-            <BetaBadge />
-          </div>
-          <p className="text-gray-600 mt-2">{t('automate')}</p>
+      <div className="max-w-sm w-full animate-fade-in">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('login')}</h1>
+          <p className="text-gray-500 mt-1.5 text-sm">{t('automate')}</p>
         </div>
 
-        <div className="card">
-          <h2 className="text-2xl font-bold mb-6">{t('login')}</h2>
-          
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t('email')}
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input"
-                placeholder="sizning@email.uz"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t('password')}
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-primary w-full flex items-center justify-center gap-2"
-            >
-              <LogIn className="w-5 h-5" />
-              {loading ? t('loading') : t('login')}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              {t('noAccount')}{' '}
-              <Link to="/register" className="text-primary-600 font-medium hover:text-primary-700">
-                {t('register')}
-              </Link>
-            </p>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-5 text-sm">
+            {error}
           </div>
-        </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              {t('email')}
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              {t('password')}
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary w-full flex items-center justify-center gap-2 py-2.5"
+          >
+            {loading ? t('loading') : t('login')}
+            {!loading && <ArrowRight className="w-4 h-4" />}
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          {t('noAccount')}{' '}
+          <Link to="/register" className="text-gray-900 font-medium hover:underline">
+            {t('register')}
+          </Link>
+        </p>
       </div>
     </div>
   );
